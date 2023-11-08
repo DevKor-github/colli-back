@@ -24,6 +24,12 @@ class Member extends BasicDate {
 
   @Column({ default: false })
   isManager: boolean;
+
+  @Column()
+  color: number;
+
+  @Column()
+  order: number;
 }
 
 export default Member;
