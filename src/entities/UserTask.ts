@@ -2,24 +2,21 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BasicDate } from './BasicDate';
+import { Task } from './Task';
 import { User } from './User';
 
-@Entity('auth_user')
-export class AuthUser extends BasicDate {
+@Entity('user_task')
+export class UserTask extends Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   userId: number;
 
   @Column()
-  accessToken: string;
-
-  @Column()
-  refreshToken: string;
+  remindTime: number;
 }

@@ -5,12 +5,12 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import User from './User';
-import Team from './Team';
+import { User } from './User';
+import { Team } from './Team';
 import { BasicDate } from './BasicDate';
 
 @Entity('member')
-class Member extends BasicDate {
+export class Member extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -31,5 +31,3 @@ class Member extends BasicDate {
   @Column()
   order: number;
 }
-
-export default Member;

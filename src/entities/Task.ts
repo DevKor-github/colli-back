@@ -1,17 +1,9 @@
-import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column } from 'typeorm';
 import { BasicDate } from './BasicDate';
-import Team from './Team';
 
-export class Task extends BasicDate {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(() => Team)
-  @JoinColumn({ name: 'teamId' })
-  teamId: number;
-
+export abstract class Task extends BasicDate {
   @Column()
-  name: string;
+  title: string;
 
   @Column()
   content: string;

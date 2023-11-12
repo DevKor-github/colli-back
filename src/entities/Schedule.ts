@@ -6,7 +6,7 @@ export abstract class Schedule extends BasicDate {
   name: string;
 
   @Column()
-  description: string;
+  content: string;
 
   @Column()
   startTime: string;

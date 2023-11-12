@@ -1,7 +1,14 @@
-import { JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Schedule } from './Schedule';
-import User from './User';
+import { User } from './User';
 
+@Entity('user_schedule')
 export class UserSchedule extends Schedule {
   @PrimaryGeneratedColumn()
   id: number;
@@ -9,4 +16,7 @@ export class UserSchedule extends Schedule {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
   userId: string;
+
+  @Column()
+  memo: string;
 }

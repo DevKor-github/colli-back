@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicDate } from './BasicDate';
 
 @Entity('team')
-class Team extends BasicDate {
+export class Team extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,5 +18,3 @@ class Team extends BasicDate {
   @Column()
   code: string;
 }
-
-export default Team;

@@ -1,26 +1,21 @@
-import {
-  CreateDateColumn,
-  DeleteDateColumn,
-  Timestamp,
-  UpdateDateColumn,
-} from 'typeorm';
+import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class BasicDate {
   /**
    생성일자
   */
   @CreateDateColumn()
-  createdAt: Timestamp;
+  createdAt: Date;
 
   /**
    마지막 수정일자
   */
   @UpdateDateColumn()
-  updatedAt: Timestamp;
+  updatedAt: Date;
 
   /**
    삭제일자
   */
   @DeleteDateColumn()
-  deletedAt: Timestamp;
+  deletedAt: Date;
 }

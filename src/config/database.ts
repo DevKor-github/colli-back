@@ -7,14 +7,20 @@ export const CustomTypeOrmModule = TypeOrmModule.forRootAsync({
   useFactory: async (configService: ConfigService) => {
     return {
       type: 'mysql',
-      host: configService.get('DATABASE_HOST'),
+      // host: configService.get('DATABASE_HOST'),
+      host: 'localhost',
       port: configService.get<number>('DATABASE_PORT'),
-      database: configService.get('DATABASE_NAME'),
-      username: configService.get('DATABASE_USER'),
-      password: configService.get('DATABASE_PASSWORD'),
+      // port: 3306,
+      // database: configService.get('DATABASE_NAME'),
+      database: 'colly',
+      // username: configService.get<string>('DATABASE_USER'),
+      username: 'colly_admin',
+      // password: configService.get('DATABASE_PASSWORD'),
+      password: 'colly1234!!',
       entities: ['dist/entities/*{.ts,.js}'],
+      // true이면 db 바뀔 때마다 재생성
       synchronize: true,
-      timezone: 'Asia/Seoul',
+      timezone: '+09:00',
     };
   },
 });
