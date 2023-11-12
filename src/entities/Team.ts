@@ -1,10 +1,20 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicDate } from './BasicDate';
 
 @Entity('team')
-class Team extends BasicDate {
+export class Team extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
-}
 
-export default Team;
+  @Column()
+  name: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  deadline: string;
+
+  @Column()
+  code: string;
+}

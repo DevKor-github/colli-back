@@ -1,10 +1,17 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BasicDate } from './BasicDate';
 
 @Entity('user')
-class User extends BasicDate {
+export class User extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
-}
 
-export default User;
+  @Column()
+  name: string;
+
+  @Column()
+  phoneNum: string;
+
+  @Column()
+  evaluation: number;
+}
