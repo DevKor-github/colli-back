@@ -7,8 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Api Swagger')
-    .setDescription('Api Description')
+    .setTitle('Colly Api Swagger')
+    .setDescription('Colly Api Description')
     .setVersion('0.0.0')
     .build();
 
