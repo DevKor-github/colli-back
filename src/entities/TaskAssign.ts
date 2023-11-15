@@ -5,20 +5,25 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Member } from './Member';
-import { TeamTask } from './TeamTask';
+import { BasicDate, Member, TeamTask } from './';
 
 @Entity('task_assign')
-export class TaskAssign {
+export class TaskAssign extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => TeamTask)
   @JoinColumn({ name: 'teamTaskId' })
+  teamTask: TeamTask;
+
+  @Column()
   temaTaskId: number;
 
   @ManyToOne(() => Member)
   @JoinColumn({ name: 'memberId' })
+  member: Member;
+
+  @Column()
   memberId: number;
 
   @Column()

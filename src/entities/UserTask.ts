@@ -5,8 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Task } from './Task';
-import { User } from './User';
+import { Task, User } from './';
 
 @Entity('user_task')
 export class UserTask extends Task {
@@ -15,6 +14,9 @@ export class UserTask extends Task {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @Column()
   userId: number;
 
   @Column()

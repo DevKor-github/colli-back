@@ -5,8 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Schedule } from './Schedule';
-import { User } from './User';
+import { Schedule, User } from './';
 
 @Entity('user_schedule')
 export class UserSchedule extends Schedule {
@@ -15,6 +14,9 @@ export class UserSchedule extends Schedule {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @Column()
   userId: string;
 
   @Column()

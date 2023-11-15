@@ -5,8 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BasicDate } from './BasicDate';
-import { Team } from './Team';
+import { BasicDate, Team } from './';
 
 @Entity('notice')
 export class Notice extends BasicDate {
@@ -15,6 +14,9 @@ export class Notice extends BasicDate {
 
   @ManyToOne(() => Team)
   @JoinColumn({ name: 'teamId' })
+  team: Team;
+
+  @Column()
   teamId: number;
 
   @Column()

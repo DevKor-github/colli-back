@@ -37,7 +37,7 @@ export class TaskController {
   async addTeamTask(@Body() addTeamTaskReqDto) {}
 
   // 팀에 속한 멤버인지검증 필요
-  @Patch('/team/:taskId/modify')
+  @Patch('/team/modify/:taskId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 수정' })
   async modifyTeamTask(
     @Param('taskId') taskId: number,
@@ -45,9 +45,10 @@ export class TaskController {
   ) {}
 
   // 팀에 속한 멤버인지검증 필요
-  @Delete('team/:taskId/remove/:tokenId')
+  @Delete('team/remove/:teamId/:taskId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 삭제' })
   async removeTeamTask(
+    @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
     @Param('tokenId') tokenId: number,
   ) {}
@@ -75,7 +76,7 @@ export class TaskController {
   async addUserTask(@Body() addUserTaskReqDto) {}
 
   // body에 들어있는 tokenId로 task의 주인이 맞는지 검증 로직 필요
-  @Patch('/user/:taskId/modify')
+  @Patch('/user/modify/:taskId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 태스크 수정' })
   async modifyUserTask(
     @Param('taskId') taskId: number,
@@ -83,7 +84,7 @@ export class TaskController {
   ) {}
 
   // tokenId로 태스크의 주인이 맞는지 검증 필요
-  @Delete('/user/:taskId/remove/:tokenId')
+  @Delete('/user/remove/:taskId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 태스크 삭제' })
   async removeUserTask(
     @Param('taskId') taskId: number,

@@ -36,16 +36,17 @@ export class ScheduleController {
   @ApiOkResponse({ type: MsgResDto, description: '팀 일정 추가' })
   async addTeamSchedule(@Body() addTeamScheduleReqDto) {}
 
-  @Patch('/team/:scheduleId/modify')
+  @Patch('/team/modify/:scheduleId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 일정 수정' })
   async modifyTeamSchedule(
     @Param('scheduleId') scheduleId,
     @Body() modifyTeamScheduleReqDto,
   ) {}
 
-  @Delete('/team/:scheduleId/remove/:tokenId')
+  @Delete('/team/remove/:teamId/:scheduleId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 일정 삭제' })
   async removeTeamSchedule(
+    @Param('teamId') teamId: number,
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
   ) {}
@@ -71,14 +72,14 @@ export class ScheduleController {
   @ApiOkResponse({ type: MsgResDto, description: '개인 일정 추가' })
   async addUserSchedule(@Body() addUserScheduleReqDto) {}
 
-  @Patch('/user/:scheduleId/modify')
+  @Patch('/user/modify/:scheduleId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 일정 수정' })
   async modifyUserSchedule(
     @Param('scheduleId') scheduleId,
     @Body() modifyUserScheduleReqDto,
   ) {}
 
-  @Delete('/user/:scheduleId/remove/:tokenId')
+  @Delete('/user/remove/:scheduleId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 일정 삭제' })
   async removeUserSchedule(
     @Param('scheduleId') scheduleId: number,

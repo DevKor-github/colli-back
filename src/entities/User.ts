@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { BasicDate } from './BasicDate';
+import { BasicDate } from './';
 
 @Entity('user')
 export class User extends BasicDate {

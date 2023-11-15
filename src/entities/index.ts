@@ -8,6 +8,9 @@ import { TeamSchedule } from './TeamSchedule';
 import { UserTask } from './UserTask';
 import { TeamTask } from './TeamTask';
 import { TaskAssign } from './TaskAssign';
+import { Schedule } from './Schedule';
+import { Task } from './Task';
+import { BasicDate } from './BasicDate';
 
 export {
   AuthUser,
@@ -20,4 +23,7 @@ export {
   UserTask,
   TeamTask,
   TaskAssign,
+  Schedule,
+  Task,
+  BasicDate,
 };

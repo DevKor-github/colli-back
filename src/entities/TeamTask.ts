@@ -5,8 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Task } from './Task';
-import { Team } from './Team';
+import { Task, Team } from './';
 
 @Entity('team_task')
 export class TeamTask extends Task {
@@ -15,6 +14,9 @@ export class TeamTask extends Task {
 
   @ManyToOne(() => Team)
   @JoinColumn({ name: 'teamId' })
+  team: Team;
+
+  @Column()
   teamId: number;
 
   @Column()

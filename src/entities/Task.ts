@@ -1,5 +1,5 @@
 import { Column } from 'typeorm';
-import { BasicDate } from './BasicDate';
+import { BasicDate } from './';
 
 export abstract class Task extends BasicDate {
   @Column()

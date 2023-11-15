@@ -15,7 +15,7 @@ export class UserController {
     return this.userService.getUserProfile(tokenId);
   }
 
-  @Get('/:userId/profile')
+  @Get('/profile/:userId')
   async getUserProfile(
     @Param('userId') userId: number,
   ): Promise<GetProfileResDto> {
