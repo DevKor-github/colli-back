@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Task, User } from './';
+import { Task } from './Task';
+import { User } from './User';
 
 @Entity('user_task')
 export class UserTask extends Task {

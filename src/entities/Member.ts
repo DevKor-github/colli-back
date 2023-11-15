@@ -5,9 +5,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BasicDate } from './BasicDate';
 import { User } from './User';
 import { Team } from './Team';
-import { BasicDate } from './BasicDate';
 
 @Entity('member')
 export class Member extends BasicDate {

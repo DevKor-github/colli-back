@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BasicDate, Team } from './';
+import { BasicDate } from './BasicDate';
+import { Team } from './Team';
 
 @Entity('notice')
 export class Notice extends BasicDate {

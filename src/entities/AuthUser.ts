@@ -5,7 +5,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BasicDate, User } from './';
+// import { BasicDate, User } from './';
+import { BasicDate } from './BasicDate';
+import { User } from './User';
 
 @Entity('auth_user')
 export class AuthUser extends BasicDate {

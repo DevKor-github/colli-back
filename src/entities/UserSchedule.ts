@@ -5,7 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Schedule, User } from './';
+import { Schedule } from './Schedule';
+import { User } from './User';
 
 @Entity('user_schedule')
 export class UserSchedule extends Schedule {

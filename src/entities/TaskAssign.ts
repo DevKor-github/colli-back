@@ -5,7 +5,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { BasicDate, Member, TeamTask } from './';
+import { BasicDate } from './BasicDate';
+import { Member } from './Member';
+import { TeamTask } from './TeamTask';
 
 @Entity('task_assign')
 export class TaskAssign extends BasicDate {
