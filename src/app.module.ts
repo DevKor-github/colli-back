@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './apis/user/user.module';
-import { CollyTypeOrmModule } from './config/database';
+import { ColliTypeOrmModule } from './config/database';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -9,7 +9,7 @@ import { CollyTypeOrmModule } from './config/database';
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     UserModule,
-    CollyTypeOrmModule,
+    ColliTypeOrmModule,
   ],
 })
 export class AppModule {}
