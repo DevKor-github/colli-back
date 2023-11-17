@@ -15,6 +15,9 @@ export class UserTask extends Task {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @Column()
   userId: number;
 
   @Column()

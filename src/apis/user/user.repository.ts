@@ -15,6 +15,6 @@ export class UserRepository extends Repository<User> {
 
     await this.update(userData, { phoneNum });
 
-    return MsgResDto.success();
+    return MsgResDto.ret();
   }
 }

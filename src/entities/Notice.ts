@@ -15,6 +15,9 @@ export class Notice extends BasicDate {
 
   @ManyToOne(() => Team)
   @JoinColumn({ name: 'teamId' })
+  team: Team;
+
+  @Column()
   teamId: number;
 
   @Column()

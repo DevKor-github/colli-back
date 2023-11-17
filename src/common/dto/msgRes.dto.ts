@@ -7,7 +7,7 @@ export class MsgResDto {
   @ApiProperty({ description: '코드', default: 'SUCCESS' })
   code: string;
 
-  static async success(msg?: string, code?: string) {
+  static async ret(msg?: string, code?: string) {
     const resDto = new MsgResDto();
     resDto.message = msg ?? '성공';
     resDto.code = code ?? 'SUCCESS';

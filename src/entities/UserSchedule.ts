@@ -15,6 +15,9 @@ export class UserSchedule extends Schedule {
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @Column()
   userId: string;
 
   @Column()

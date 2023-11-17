@@ -1,4 +1,10 @@
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Schedule } from './Schedule';
 import { Team } from './Team';
 
@@ -9,5 +15,8 @@ export class TeamSchedule extends Schedule {
 
   @ManyToOne(() => Team)
   @JoinColumn({ name: 'teamId' })
+  team: Team;
+
+  @Column()
   teamId: number;
 }
