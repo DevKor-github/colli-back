@@ -15,4 +15,7 @@ export class ScheduleReqDto {
 
   @ApiProperty({ description: '일정 종료 시간' })
   endTime: string;
+
+  @ApiProperty({ description: '일정 관련 메모' })
+  memo: string;
 }

@@ -1,11 +1,16 @@
 import { Member } from 'src/entities';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { GetMemberResDto } from './dto/getMemberRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
-import { CustomRepository } from 'src/common/decorators/customRepository';
+import { Injectable } from '@nestjs/common';
 
-@CustomRepository(Member)
+// @CustomRepository(Member)
+@Injectable()
 export class MemberRepository extends Repository<Member> {
+  constructor(private dataSource: DataSource) {
+    super(Member, dataSource.createEntityManager());
+  }
+
   async findAllMembersInTeam(
     teamId: number,
   ): Promise<ListResDto<GetMemberResDto>> {

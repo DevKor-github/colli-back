@@ -156,8 +156,8 @@ export class ScheduleService {
         // 시나리오 2
         // 일정 시작이 구간 밖이고, 일정 종료가 구간 안인 경우
         else {
-          const ei: number = Math.floor(
-            (startDate.getTime() - dt.endTime.getTime()) / (1000 * 3600 * 24),
+          const ei: number = Math.ceil(
+            (dt.endTime.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
           );
 
           for (let i = 0; i < ei; i++) {
@@ -166,7 +166,7 @@ export class ScheduleService {
         }
       } else {
         const si: number = Math.floor(
-          (startDate.getTime() - dt.startTime.getTime()) / (1000 * 3600 * 24),
+          (dt.startTime.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
         );
         // 시나리오 3
         // 일정 시작이 구간 안이고, 일정 종료가 구간 밖인 경우
@@ -178,8 +178,9 @@ export class ScheduleService {
         // 시나리오 4
         // 일정 시작이 구간 안이고, 일정 종료도 구간 안인 경우
         else {
-          const ei: number =
-            (startDate.getTime() - dt.endTime.getTime()) / (1000 * 3600 * 24);
+          const ei: number = Math.ceil(
+            (dt.endTime.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
+          );
 
           for (let i = si; i < ei; i++) {
             calArr[i]++;
