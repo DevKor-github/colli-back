@@ -13,13 +13,14 @@ import {
   TeamTaskReposiotry,
   UserTaskReposiotry,
 } from './apis/task/task.repository';
+import { MemberModule } from './apis/member/member.module';
+import { ScheduleModule } from './apis/schedule/schedule.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
-    UserModule,
     ColliTypeOrmModule,
     CustomTypeOrmRepositoryModule.forCustomRepository([
       UserRepository,
@@ -29,6 +30,9 @@ import {
       TeamTaskReposiotry,
       UserTaskReposiotry,
     ]),
+    UserModule,
+    MemberModule,
+    ScheduleModule,
   ],
 })
 export class AppModule {}

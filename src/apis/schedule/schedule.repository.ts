@@ -1,6 +1,6 @@
 import { TeamSchedule, UserSchedule } from 'src/entities';
-import { Between, Repository } from 'typeorm';
-import { userScheduleResDto } from './dto/userScheduleRes.dto';
+import { Repository } from 'typeorm';
+import { UserScheduleResDto } from './dto/userScheduleRes.dto';
 import { TeamScheduleResDto } from './dto/teamScheduleRes.dto';
 import { CustomRepository } from 'src/common/decorators/customRepository';
 
@@ -8,10 +8,22 @@ import { CustomRepository } from 'src/common/decorators/customRepository';
 export class UserScheduleRepository extends Repository<UserSchedule> {
   async findUserScheduleDetail(
     scheduleId: number,
-  ): Promise<userScheduleResDto> {
+  ): Promise<UserScheduleResDto> {
     return this.findOneByOrFail({ id: scheduleId }).then((data) =>
-      userScheduleResDto.makeRes(data),
+      UserScheduleResDto.makeRes(data),
     );
+  }
+
+  async findUserCalendar(userId: number, startDate: Date, endDate: Date) {
+    const scheduleList = await this.createQueryBuilder('user_schedule')
+      .where('user_schedule.userId = :userId', { userId })
+      .andWhere(
+        '!(user_schedule.endTime < :startDate or user_schedule.startTime >= :endDate)',
+        { startDate, endDate },
+      )
+      .getMany();
+
+    return scheduleList.map((sc) => UserScheduleResDto.makeRes(sc));
   }
 }
 
@@ -26,15 +38,20 @@ export class TeamScheduleRepository extends Repository<TeamSchedule> {
     );
   }
 
-  async findTeamCalendar(teamId: number, startTime: string, endTime: string) {
-    return this.findAndCount({
-      where: [
-        { teamId, startTime: Between(startTime, endTime) },
-        { teamId, endTime: Between(startTime, endTime) },
-      ],
-    }).then(([data, totalCount]) => ({
-      dataList: data.map((dt) => TeamScheduleResDto.makeRes(dt, 0)),
-      totalCount,
-    }));
+  async findTeamCalendar(
+    teamId: number,
+    startDate: Date,
+    endDate: Date,
+    color: number = 0,
+  ): Promise<TeamScheduleResDto[]> {
+    const scheduleList = await this.createQueryBuilder('team_schedule')
+      .where('team_schedule.teamId = :teamId', { teamId })
+      .andWhere(
+        '!(team_schedule.endTime < :startDate or team_schedule.startTime >= :endDate)',
+        { startDate, endDate },
+      )
+      .getMany();
+
+    return scheduleList.map((sc) => TeamScheduleResDto.makeRes(sc, color));
   }
 }

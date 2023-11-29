@@ -3,14 +3,17 @@ import { BasicDate } from './BasicDate';
 
 export abstract class Schedule extends BasicDate {
   @Column()
-  name: string;
+  title: string;
 
   @Column()
   content: string;
 
   @Column()
-  startTime: string;
+  startTime: Date;
 
   @Column()
-  endTime: string;
+  endTime: Date;
+
+  @Column()
+  memo: string;
 }

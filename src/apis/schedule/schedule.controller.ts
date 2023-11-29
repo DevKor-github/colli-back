@@ -6,50 +6,113 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
+import { MemberService } from '../member/member.service';
+import { ScheduleResDto } from './dto/scheduleRes.dto';
+import { GetCalendarReqDto } from './dto/getCalendarReq.dto';
+import { ScheduleReqDto } from './dto/scheduleReq.dto';
+import { UserService } from '../user/user.service';
 
 @Controller('schedule')
 export class ScheduleController {
-  constructor(private readonly scheduleService: ScheduleService) {}
+  constructor(
+    private readonly scheduleService: ScheduleService,
+    private readonly memberService: MemberService,
+    private readonly userService: UserService,
+  ) {}
 
-  @Get('/team/:scheduleId/:tokenId')
-  @ApiOkResponse({ description: '팀 일정 상세 조회' })
+  @Get('/team/:teamId/:scheduleId/:tokenId')
+  @ApiOkResponse({ type: ScheduleResDto, description: '팀 일정 상세 조회' })
   async getTeamScehduleDetail(
+    @Param('teamId') teamId: number,
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {}
+  ): Promise<ScheduleResDto> {
+    const { color } = await this.memberService.checkIsMember(teamId, tokenId);
 
-  @Get('/calendar/team/:teamId/:tokenId')
+    return this.scheduleService.getScheduleDetail(scheduleId, true, color);
+  }
+
+  @Post('/calendar/team/:teamId/:tokenId')
   @ApiOkResponse({ description: '팀 캘린더 조회' })
   async getTeamCalendar(
+    @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('teamId') teamId: number,
     @Param('tokenId') tokenId: number,
-    @Query('month') month: number,
-    @Query('week') week?: number, //week로 받을지, 시작날짜 종료날짜로 받을지 좀더 고민
-  ) {}
+  ): Promise<{ dataList: number[] }> {
+    const { color } = await this.memberService.checkIsMember(teamId, tokenId);
 
-  @Post('/team/add')
+    return this.scheduleService.getTeamCalendar(
+      teamId,
+      getCalendarReqDto,
+      color,
+    );
+  }
+
+  @Post('/date/team/:teamId/:tokenId')
+  @ApiOkResponse({ description: '팀 캘린더 날짜별 일정 조회' })
+  async getTeamDateCalendar(
+    @Body() getCalendarReqDto: GetCalendarReqDto,
+    @Param('teamId') teamId: number,
+    @Param('tokenId') tokenId: number,
+  ) {
+    const { color } = await this.memberService.checkIsMember(teamId, tokenId);
+
+    return this.scheduleService.getTeamDateCalendar(
+      teamId,
+      getCalendarReqDto,
+      color,
+    );
+  }
+
+  @Post('/team/:teamId/add/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 일정 추가' })
-  async addTeamSchedule(@Body() addTeamScheduleReqDto) {}
+  async addTeamSchedule(
+    @Body() addTeamScheduleReqDto: ScheduleReqDto,
+    @Param('teamId') teamId: number,
+    @Param('tokenId') tokenId: number,
+  ) {
+    await this.memberService.checkIsMember(teamId, tokenId);
 
-  @Patch('/team/modify/:scheduleId')
+    return this.scheduleService.addSchedule(
+      addTeamScheduleReqDto,
+      true, //isTeam
+      teamId,
+    );
+  }
+
+  @Patch('/team/:teamId/modify/:scheduleId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 일정 수정' })
   async modifyTeamSchedule(
-    @Param('scheduleId') scheduleId,
-    @Body() modifyTeamScheduleReqDto,
-  ) {}
+    @Body() modifyTeamScheduleReqDto: ScheduleReqDto,
+    @Param('teamId') teamId: number,
+    @Param('scheduleId') scheduleId: number,
+    @Param('tokenId') tokenId: number,
+  ) {
+    await this.memberService.checkIsMember(teamId, tokenId);
 
-  @Delete('/team/remove/:teamId/:scheduleId/:tokenId')
+    return this.scheduleService.modifySchedule(
+      modifyTeamScheduleReqDto,
+      scheduleId,
+      true, //isTeam
+      teamId,
+    );
+  }
+
+  @Delete('/team/:teamId/remove/:scheduleId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 일정 삭제' })
   async removeTeamSchedule(
     @Param('teamId') teamId: number,
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {}
+  ) {
+    await this.memberService.checkIsMember(teamId, tokenId);
+
+    return this.scheduleService.removeScheule(scheduleId, true, teamId);
+  }
 
   // 아래는 유저 페이지
 
@@ -58,31 +121,74 @@ export class ScheduleController {
   async getUserScehduleDetail(
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {}
+  ) {
+    await this.userService.getUserProfile(tokenId);
 
-  @Get('/calendar/user/:tokenId')
+    return this.scheduleService.getScheduleDetail(scheduleId, false);
+  }
+
+  @Post('/calendar/user/:tokenId')
   @ApiOkResponse({ description: '개인 캘린더 조회' })
   async getUserCalendar(
+    @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('tokenId') tokenId: number,
-    @Query('month') month: number,
-    @Query('week') week?: number, //week로 받을지, 시작날짜 종료날짜로 받을지 좀더 고민
-  ) {}
+  ): Promise<{ dataList: number[] }> {
+    await this.userService.getUserProfile(tokenId);
 
-  @Post('/user/add')
+    return this.scheduleService.getUserCalendar(tokenId, getCalendarReqDto);
+  }
+
+  @Post('/date/user/:tokenId')
+  @ApiOkResponse({ description: '팀 캘린더 날짜별 일정 조회' })
+  async getUserDateCalendar(
+    @Body() getCalendarReqDto: GetCalendarReqDto,
+    @Param('tokenId') tokenId: number,
+  ) {
+    await this.userService.getUserProfile(tokenId);
+
+    return this.scheduleService.getUserDateCalendar(tokenId, getCalendarReqDto);
+  }
+
+  @Post('/user/add/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 일정 추가' })
-  async addUserSchedule(@Body() addUserScheduleReqDto) {}
+  async addUserSchedule(
+    @Body() addUserScheduleReqDto: ScheduleReqDto,
+    @Param('tokenId') tokenId: number,
+  ) {
+    await this.userService.getUserProfile(tokenId);
 
-  @Patch('/user/modify/:scheduleId')
+    return this.scheduleService.addSchedule(
+      addUserScheduleReqDto,
+      false, //isTeam
+      tokenId,
+    );
+  }
+
+  @Patch('/user/modify/:scheduleId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 일정 수정' })
   async modifyUserSchedule(
     @Param('scheduleId') scheduleId,
-    @Body() modifyUserScheduleReqDto,
-  ) {}
+    @Param('tokenId') tokenId: number,
+    @Body() modifyUserScheduleReqDto: ScheduleReqDto,
+  ) {
+    await this.userService.getUserProfile(tokenId);
+
+    return this.scheduleService.modifySchedule(
+      modifyUserScheduleReqDto,
+      scheduleId,
+      false, //isTeam
+      tokenId,
+    );
+  }
 
   @Delete('/user/remove/:scheduleId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '개인 일정 삭제' })
   async removeUserSchedule(
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {}
+  ) {
+    await this.userService.getUserProfile(tokenId);
+
+    return this.scheduleService.removeScheule(scheduleId, false, tokenId);
+  }
 }
