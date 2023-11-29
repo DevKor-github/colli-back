@@ -1,11 +1,10 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TeamTaskReposiotry, UserTaskReposiotry } from './task.repository';
 import { Module } from '@nestjs/common';
 import { TaskController } from './task.controller';
 import { TaskService } from './task.service';
+import { CustomTypeOrmRepositoryModule } from 'src/config/customTypeOrmRepository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserTaskReposiotry, TeamTaskReposiotry])],
+  imports: [CustomTypeOrmRepositoryModule],
   controllers: [TaskController],
   providers: [TaskService],
   exports: [TaskService],

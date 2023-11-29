@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { CustomRepository } from 'src/common/decorators/customRepository';
 import { TeamTask, UserTask } from 'src/entities';
 import { Repository } from 'typeorm';
 
-@Injectable()
+@CustomRepository(UserTask)
 export class UserTaskReposiotry extends Repository<UserTask> {}
 
-@Injectable()
+@CustomRepository(TeamTask)
 export class TeamTaskReposiotry extends Repository<TeamTask> {}

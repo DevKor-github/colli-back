@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import { Member } from 'src/entities';
 import { Repository } from 'typeorm';
 import { GetMemberResDto } from './dto/getMemberRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
+import { CustomRepository } from 'src/common/decorators/customRepository';
 
-@Injectable()
+@CustomRepository(Member)
 export class MemberRepository extends Repository<Member> {
   async findAllMembersInTeam(
     teamId: number,

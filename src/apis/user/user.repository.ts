@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 import { ModifyProfileReqDto } from './dto/modifyProfileReq.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
+import { CustomRepository } from 'src/common/decorators/customRepository';
 
-@Injectable()
+@CustomRepository(User)
 export class UserRepository extends Repository<User> {
   async findAndUpdate(
     tokenId: number,
