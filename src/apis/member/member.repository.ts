@@ -4,7 +4,6 @@ import { GetMemberResDto } from './dto/getMemberRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { Injectable } from '@nestjs/common';
 
-// @CustomRepository(Member)
 @Injectable()
 export class MemberRepository extends Repository<Member> {
   constructor(private dataSource: DataSource) {

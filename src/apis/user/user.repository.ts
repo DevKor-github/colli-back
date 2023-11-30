@@ -4,7 +4,6 @@ import { ModifyProfileReqDto } from './dto/modifyProfileReq.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { Injectable } from '@nestjs/common';
 
-// @CustomRepository(User)
 @Injectable()
 export class UserRepository extends Repository<User> {
   constructor(private dataSource: DataSource) {

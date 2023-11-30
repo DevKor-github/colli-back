@@ -1,9 +1,17 @@
-import { CustomRepository } from 'src/common/decorators/customRepository';
+import { Injectable } from '@nestjs/common';
 import { TeamTask, UserTask } from 'src/entities';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
-@CustomRepository(UserTask)
-export class UserTaskReposiotry extends Repository<UserTask> {}
+@Injectable()
+export class UserTaskReposiotry extends Repository<UserTask> {
+  constructor(private dataSource: DataSource) {
+    super(UserTask, dataSource.createEntityManager());
+  }
+}
 
-@CustomRepository(TeamTask)
-export class TeamTaskReposiotry extends Repository<TeamTask> {}
+@Injectable()
+export class TeamTaskReposiotry extends Repository<TeamTask> {
+  constructor(private dataSource: DataSource) {
+    super(TeamTask, dataSource.createEntityManager());
+  }
+}

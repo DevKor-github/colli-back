@@ -3,14 +3,13 @@ import { ScheduleService } from './schedule.service';
 import { ScheduleController } from './schedule.controller';
 import { UserModule } from '../user/user.module';
 import { MemberModule } from '../member/member.module';
-import { CustomTypeOrmRepositoryModule } from 'src/config/customTypeOrmRepository';
 import {
   TeamScheduleRepository,
   UserScheduleRepository,
 } from './schedule.repository';
 
 @Module({
-  imports: [CustomTypeOrmRepositoryModule, UserModule, MemberModule],
+  imports: [UserModule, MemberModule],
   controllers: [ScheduleController],
   providers: [ScheduleService, UserScheduleRepository, TeamScheduleRepository],
   exports: [ScheduleService],

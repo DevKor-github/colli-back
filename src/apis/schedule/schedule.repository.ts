@@ -4,7 +4,6 @@ import { UserScheduleResDto } from './dto/userScheduleRes.dto';
 import { TeamScheduleResDto } from './dto/teamScheduleRes.dto';
 import { Injectable } from '@nestjs/common';
 
-// @CustomRepository(UserSchedule)
 @Injectable()
 export class UserScheduleRepository extends Repository<UserSchedule> {
   constructor(private dataSource: DataSource) {
