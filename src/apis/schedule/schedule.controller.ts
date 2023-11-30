@@ -16,6 +16,7 @@ import { GetCalendarReqDto } from './dto/getCalendarReq.dto';
 import { ScheduleReqDto } from './dto/scheduleReq.dto';
 import { UserService } from '../user/user.service';
 
+// 결국에 team/teamId를 빼내는 라우팅으로 변경을 하는게 맞을거 같음
 @Controller('schedule')
 export class ScheduleController {
   constructor(
@@ -139,7 +140,7 @@ export class ScheduleController {
   }
 
   @Post('/date/user/:tokenId')
-  @ApiOkResponse({ description: '팀 캘린더 날짜별 일정 조회' })
+  @ApiOkResponse({ description: '개인 캘린더 날짜별 일정 조회' })
   async getUserDateCalendar(
     @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('tokenId') tokenId: number,

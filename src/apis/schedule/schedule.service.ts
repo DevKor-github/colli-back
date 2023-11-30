@@ -145,6 +145,24 @@ export class ScheduleService {
     // const calArr = new Array<number>(35).fill(0);
     // 들고온 scheduleList를 각 시나리오로 케이스를 나눠서 배열 count 올려주기
     dataList.map((dt) => {
+      // 좀 더 깔끔한 코드
+      // const tsi =
+      //   dt.startTime < startDate
+      //     ? 0
+      //     : Math.floor(
+      //         (dt.startTime.getTime() - startDate.getTime()) /
+      //           (1000 * 3600 * 24),
+      //       );
+
+      // const tei =
+      //   dt.endTime >= endDate
+      //     ? 35
+      //     : Math.ceil(
+      //         (dt.endTime.getTime() - startDate.getTime()) / (1000 * 3600 * 24),
+      //       );
+
+      // for (let i = tsi; i < tei; i++) calArr[i]++;
+
       if (dt.startTime < startDate) {
         // 시나리오 1
         // 일정 시작이 구간 밖이고, 일정 종료도 구간 밖인 경우
@@ -254,21 +272,33 @@ export class ScheduleService {
     const endTime = new Date(req.endTime);
 
     if (isTeam) {
-      await this.teamScheduleRepository.save({
+      await this.teamScheduleRepository.findOneByOrFail({
         id: scheduleId,
         teamId: id,
-        startTime: startTime,
-        endTime: endTime,
-        ...req,
       });
+
+      await this.teamScheduleRepository.update(
+        { id: scheduleId, teamId: id },
+        {
+          startTime: startTime,
+          endTime: endTime,
+          ...req,
+        },
+      );
     } else {
-      await this.userScheduleRepository.insert({
+      await this.userScheduleRepository.findOneByOrFail({
         id: scheduleId,
         userId: id,
-        startTime,
-        endTime,
-        ...req,
       });
+
+      await this.userScheduleRepository.update(
+        { id: scheduleId, userId: id },
+        {
+          startTime,
+          endTime,
+          ...req,
+        },
+      );
     }
 
     return MsgResDto.ret();
@@ -276,11 +306,21 @@ export class ScheduleService {
 
   async removeScheule(scheduleId: number, isTeam: boolean, id: number) {
     if (isTeam) {
+      await this.teamScheduleRepository.findOneByOrFail({
+        id: scheduleId,
+        teamId: id,
+      });
+
       await this.teamScheduleRepository.softRemove({
         id: scheduleId,
         teamId: id,
       });
     } else {
+      await this.userScheduleRepository.findOneByOrFail({
+        id: scheduleId,
+        userId: id,
+      });
+
       await this.userScheduleRepository.softRemove({
         id: scheduleId,
         userId: id,
