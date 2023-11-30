@@ -10,6 +10,9 @@ import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { MemberRepository } from '../member/member.repository';
 import { TeamScheduleResDto } from './dto/teamScheduleRes.dto';
 import { UserScheduleResDto } from './dto/userScheduleRes.dto';
+import { DateCalendarResDto } from './dto/dateCalendarRes.dto';
+import { CalendarCountResDto } from './dto/calendarCountRes.dto';
+import { MergedDateCalendarResDto } from './dto/mergedDateCalendarRes.dto';
 
 @Injectable()
 export class ScheduleService {
@@ -32,7 +35,11 @@ export class ScheduleService {
     else return this.userScheduleRepository.findUserScheduleDetail(scheduleId);
   }
 
-  async getTeamCalendar(teamId: number, req: GetCalendarReqDto, color: number) {
+  async getTeamCalendar(
+    teamId: number,
+    req: GetCalendarReqDto,
+    color: number,
+  ): Promise<CalendarCountResDto> {
     // 캘린더 조회 시작구간, 종료구간
     const startDate = new Date(req.start);
     const endDate = new Date(req.end);
@@ -52,14 +59,14 @@ export class ScheduleService {
       arr,
     );
 
-    return { dataList: calArr };
+    return CalendarCountResDto.makeRes(calArr);
   }
 
   async getTeamDateCalendar(
     teamId: number,
     req: GetCalendarReqDto,
     color: number,
-  ) {
+  ): Promise<DateCalendarResDto> {
     const startDate = new Date(req.start);
     const endDate = new Date(req.end);
 
@@ -70,12 +77,15 @@ export class ScheduleService {
       color,
     );
 
-    return { dataList: teamSchedules, totalCount: teamSchedules.length };
+    return DateCalendarResDto.makeRes(teamSchedules, teamSchedules.length);
   }
 
   // 유저 캘린더 조회
   // 유저가 속해 있는 팀 캘린더도 모두 조회해서 가져와서 합쳐야함.
-  async getUserCalendar(userId: number, req: GetCalendarReqDto) {
+  async getUserCalendar(
+    userId: number,
+    req: GetCalendarReqDto,
+  ): Promise<CalendarCountResDto> {
     // 캘린더 조회 시작구간, 종료구간
     const startDate = new Date(req.start);
     const endDate = new Date(req.end);
@@ -108,10 +118,13 @@ export class ScheduleService {
       uCalArr,
     );
 
-    return { dataList: tCalArr };
+    return CalendarCountResDto.makeRes(tCalArr);
   }
 
-  async getUserDateCalendar(userId: number, req: GetCalendarReqDto) {
+  async getUserDateCalendar(
+    userId: number,
+    req: GetCalendarReqDto,
+  ): Promise<MergedDateCalendarResDto> {
     const startDate = new Date(req.start);
     const endDate = new Date(req.end);
 
@@ -127,10 +140,10 @@ export class ScheduleService {
       endDate,
     );
 
-    return {
-      dataList: { user: userSchedules, team: teamSchedules },
-      totalCount: userSchedules.length,
-    };
+    return MergedDateCalendarResDto.makeRes(
+      DateCalendarResDto.makeRes(userSchedules, userSchedules.length),
+      DateCalendarResDto.makeRes(teamSchedules, teamSchedules.length),
+    );
   }
 
   // 캘린더 조회 함수에서 사용
@@ -139,7 +152,7 @@ export class ScheduleService {
     startDate: Date,
     endDate: Date,
     calArr: number[],
-  ): Array<number> {
+  ): number[] {
     // 길이 35 배열 생성 (5주짜리)
     // 각 배열의 값은 구간 시작일로부터 날짜별로 있는 일정들의 개수
     // const calArr = new Array<number>(35).fill(0);
@@ -215,7 +228,7 @@ export class ScheduleService {
     userId: number,
     startDate: Date,
     endDate: Date,
-  ) {
+  ): Promise<TeamScheduleResDto[]> {
     const members = await this.memberRepository.find({
       where: { userId },
     });
@@ -267,7 +280,7 @@ export class ScheduleService {
     scheduleId: number,
     isTeam: boolean,
     id: number, // 팀id or 유저 id
-  ) {
+  ): Promise<MsgResDto> {
     const startTime = new Date(req.startTime);
     const endTime = new Date(req.endTime);
 
@@ -304,7 +317,11 @@ export class ScheduleService {
     return MsgResDto.ret();
   }
 
-  async removeScheule(scheduleId: number, isTeam: boolean, id: number) {
+  async removeScheule(
+    scheduleId: number,
+    isTeam: boolean,
+    id: number,
+  ): Promise<MsgResDto> {
     if (isTeam) {
       await this.teamScheduleRepository.findOneByOrFail({
         id: scheduleId,

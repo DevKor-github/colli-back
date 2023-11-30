@@ -8,15 +8,19 @@ import {
   Post,
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { MemberService } from '../member/member.service';
 import { ScheduleResDto } from './dto/scheduleRes.dto';
 import { GetCalendarReqDto } from './dto/getCalendarReq.dto';
 import { ScheduleReqDto } from './dto/scheduleReq.dto';
 import { UserService } from '../user/user.service';
+import { CalendarCountResDto } from './dto/calendarCountRes.dto';
+import { DateCalendarResDto } from './dto/dateCalendarRes.dto';
+import { MergedDateCalendarResDto } from './dto/mergedDateCalendarRes.dto';
 
 // 결국에 team/teamId를 빼내는 라우팅으로 변경을 하는게 맞을거 같음
+@ApiTags('schedule')
 @Controller('schedule')
 export class ScheduleController {
   constructor(
@@ -38,7 +42,7 @@ export class ScheduleController {
   }
 
   @Post('/calendar/team/:teamId/:tokenId')
-  @ApiOkResponse({ description: '팀 캘린더 조회' })
+  @ApiOkResponse({ type: CalendarCountResDto, description: '팀 캘린더 조회' })
   async getTeamCalendar(
     @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('teamId') teamId: number,
@@ -54,12 +58,15 @@ export class ScheduleController {
   }
 
   @Post('/date/team/:teamId/:tokenId')
-  @ApiOkResponse({ description: '팀 캘린더 날짜별 일정 조회' })
+  @ApiOkResponse({
+    type: DateCalendarResDto,
+    description: '팀 캘린더 날짜별 일정 조회',
+  })
   async getTeamDateCalendar(
     @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('teamId') teamId: number,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<DateCalendarResDto> {
     const { color } = await this.memberService.checkIsMember(teamId, tokenId);
 
     return this.scheduleService.getTeamDateCalendar(
@@ -75,7 +82,7 @@ export class ScheduleController {
     @Body() addTeamScheduleReqDto: ScheduleReqDto,
     @Param('teamId') teamId: number,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<MsgResDto> {
     await this.memberService.checkIsMember(teamId, tokenId);
 
     return this.scheduleService.addSchedule(
@@ -92,7 +99,7 @@ export class ScheduleController {
     @Param('teamId') teamId: number,
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<MsgResDto> {
     await this.memberService.checkIsMember(teamId, tokenId);
 
     return this.scheduleService.modifySchedule(
@@ -109,7 +116,7 @@ export class ScheduleController {
     @Param('teamId') teamId: number,
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<MsgResDto> {
     await this.memberService.checkIsMember(teamId, tokenId);
 
     return this.scheduleService.removeScheule(scheduleId, true, teamId);
@@ -129,22 +136,25 @@ export class ScheduleController {
   }
 
   @Post('/calendar/user/:tokenId')
-  @ApiOkResponse({ description: '개인 캘린더 조회' })
+  @ApiOkResponse({ type: CalendarCountResDto, description: '개인 캘린더 조회' })
   async getUserCalendar(
     @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('tokenId') tokenId: number,
-  ): Promise<{ dataList: number[] }> {
+  ): Promise<CalendarCountResDto> {
     await this.userService.getUserProfile(tokenId);
 
     return this.scheduleService.getUserCalendar(tokenId, getCalendarReqDto);
   }
 
   @Post('/date/user/:tokenId')
-  @ApiOkResponse({ description: '개인 캘린더 날짜별 일정 조회' })
+  @ApiOkResponse({
+    type: MergedDateCalendarResDto,
+    description: '개인 캘린더 날짜별 일정 조회',
+  })
   async getUserDateCalendar(
     @Body() getCalendarReqDto: GetCalendarReqDto,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<MergedDateCalendarResDto> {
     await this.userService.getUserProfile(tokenId);
 
     return this.scheduleService.getUserDateCalendar(tokenId, getCalendarReqDto);
@@ -155,7 +165,7 @@ export class ScheduleController {
   async addUserSchedule(
     @Body() addUserScheduleReqDto: ScheduleReqDto,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<MsgResDto> {
     await this.userService.getUserProfile(tokenId);
 
     return this.scheduleService.addSchedule(
@@ -171,7 +181,7 @@ export class ScheduleController {
     @Param('scheduleId') scheduleId,
     @Param('tokenId') tokenId: number,
     @Body() modifyUserScheduleReqDto: ScheduleReqDto,
-  ) {
+  ): Promise<MsgResDto> {
     await this.userService.getUserProfile(tokenId);
 
     return this.scheduleService.modifySchedule(
@@ -187,7 +197,7 @@ export class ScheduleController {
   async removeUserSchedule(
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
-  ) {
+  ): Promise<MsgResDto> {
     await this.userService.getUserProfile(tokenId);
 
     return this.scheduleService.removeScheule(scheduleId, false, tokenId);

@@ -9,10 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 
 // 일단 개인/팀 태스크 api 싹 분리해보자
+@ApiTags('task')
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
