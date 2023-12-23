@@ -3,7 +3,9 @@ import { UserService } from './user.service';
 import { GetProfileResDto } from './dto/getProfileRes.dto';
 import { ModifyProfileReqDto } from './dto/modifyProfileReq.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

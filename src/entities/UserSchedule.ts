@@ -18,8 +18,5 @@ export class UserSchedule extends Schedule {
   user: User;
 
   @Column()
-  userId: string;
-
-  @Column()
-  memo: string;
+  userId: number;
 }

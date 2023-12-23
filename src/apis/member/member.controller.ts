@@ -1,10 +1,11 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { MemberService } from './member.service';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetMemberResDto } from './dto/getMemberRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 
+@ApiTags('member')
 @Controller('member')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}

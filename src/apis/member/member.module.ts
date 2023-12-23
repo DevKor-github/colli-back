@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { MemberRepository } from './member.repository';
 import { MemberController } from './member.controller';
 import { MemberService } from './member.service';
+import { MemberRepository } from './member.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MemberRepository])],
+  imports: [],
   controllers: [MemberController],
-  providers: [MemberService],
-  exports: [MemberService],
+  providers: [MemberService, MemberRepository],
+  exports: [MemberService, MemberRepository],
 })
 export class MemberModule {}

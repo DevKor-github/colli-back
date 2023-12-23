@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
 import { User } from 'src/entities';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ModifyProfileReqDto } from './dto/modifyProfileReq.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
+  constructor(private dataSource: DataSource) {
+    super(User, dataSource.createEntityManager());
+  }
+
   async findAndUpdate(
     tokenId: number,
     modifyProfileReqDto: ModifyProfileReqDto,
