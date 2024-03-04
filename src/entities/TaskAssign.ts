@@ -7,19 +7,19 @@ import {
 } from 'typeorm';
 import { BasicDate } from './BasicDate';
 import { Member } from './Member';
-import { Task } from './Task';
+import { SubTask } from './SubTask';
 
 @Entity('task_assign')
 export class TaskAssign extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Task)
-  @JoinColumn({ name: 'taskId' })
-  task: Task;
+  @ManyToOne(() => SubTask)
+  @JoinColumn({ name: 'subTaskId' })
+  subTask: SubTask;
 
   @Column()
-  taskId: number;
+  subTaskId: number;
 
   @ManyToOne(() => Member)
   @JoinColumn({ name: 'memberId' })
