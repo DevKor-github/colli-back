@@ -17,7 +17,6 @@ import { ScheduleReqDto } from './dto/scheduleReq.dto';
 import { UserService } from '../user/user.service';
 import { CalendarCountResDto } from './dto/calendarCountRes.dto';
 import { DateCalendarResDto } from './dto/dateCalendarRes.dto';
-import { MergedDateCalendarResDto } from './dto/mergedDateCalendarRes.dto';
 
 // 결국에 team/teamId를 빼내는 라우팅으로 변경을 하는게 맞을거 같음
 @ApiTags('schedule')
@@ -36,9 +35,9 @@ export class ScheduleController {
     @Param('scheduleId') scheduleId: number,
     @Param('tokenId') tokenId: number,
   ): Promise<ScheduleResDto> {
-    const { color } = await this.memberService.checkIsMember(teamId, tokenId);
+    await this.memberService.checkIsMember(teamId, tokenId);
 
-    return this.scheduleService.getScheduleDetail(scheduleId, true, color);
+    return this.scheduleService.getScheduleDetail(scheduleId);
   }
 
   @Post('/calendar/team/:teamId/:tokenId')
@@ -48,13 +47,9 @@ export class ScheduleController {
     @Param('teamId') teamId: number,
     @Param('tokenId') tokenId: number,
   ): Promise<{ dataList: number[] }> {
-    const { color } = await this.memberService.checkIsMember(teamId, tokenId);
+    await this.memberService.checkIsMember(teamId, tokenId);
 
-    return this.scheduleService.getTeamCalendar(
-      teamId,
-      getCalendarReqDto,
-      color,
-    );
+    return this.scheduleService.getScheduleCalendar(teamId, getCalendarReqDto);
   }
 
   @Post('/date/team/:teamId/:tokenId')
@@ -67,12 +62,11 @@ export class ScheduleController {
     @Param('teamId') teamId: number,
     @Param('tokenId') tokenId: number,
   ): Promise<DateCalendarResDto> {
-    const { color } = await this.memberService.checkIsMember(teamId, tokenId);
+    await this.memberService.checkIsMember(teamId, tokenId);
 
-    return this.scheduleService.getTeamDateCalendar(
+    return this.scheduleService.getScheduleDateCalendar(
       teamId,
       getCalendarReqDto,
-      color,
     );
   }
 
@@ -85,11 +79,7 @@ export class ScheduleController {
   ): Promise<MsgResDto> {
     await this.memberService.checkIsMember(teamId, tokenId);
 
-    return this.scheduleService.addSchedule(
-      addTeamScheduleReqDto,
-      true, //isTeam
-      teamId,
-    );
+    return this.scheduleService.addSchedule(addTeamScheduleReqDto, teamId);
   }
 
   @Patch('/team/:teamId/modify/:scheduleId/:tokenId')
@@ -105,7 +95,6 @@ export class ScheduleController {
     return this.scheduleService.modifySchedule(
       modifyTeamScheduleReqDto,
       scheduleId,
-      true, //isTeam
       teamId,
     );
   }
@@ -119,11 +108,11 @@ export class ScheduleController {
   ): Promise<MsgResDto> {
     await this.memberService.checkIsMember(teamId, tokenId);
 
-    return this.scheduleService.removeScheule(scheduleId, true, teamId);
+    return this.scheduleService.removeScheule(scheduleId, teamId);
   }
 
   // 아래는 유저 페이지
-
+  /*
   @Get('/user/:scheduleId/:tokenId')
   @ApiOkResponse({ description: '개인 일정 상세 조회' })
   async getUserScehduleDetail(
@@ -202,4 +191,5 @@ export class ScheduleController {
 
     return this.scheduleService.removeScheule(scheduleId, false, tokenId);
   }
+  */
 }

@@ -1,7 +1,25 @@
-import { Column } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BasicDate } from './BasicDate';
+import { Team } from './Team';
 
-export abstract class Task extends BasicDate {
+@Entity('task')
+export class Task extends BasicDate {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => Team)
+  @JoinColumn({ name: 'teamId' })
+  team: Team;
+
+  @Column()
+  teamId: number;
+
   @Column()
   title: string;
 
@@ -10,4 +28,7 @@ export abstract class Task extends BasicDate {
 
   @Column()
   deadline: string;
+
+  // @Column()
+  // remindTime: number;
 }

@@ -7,19 +7,19 @@ import {
 } from 'typeorm';
 import { BasicDate } from './BasicDate';
 import { Member } from './Member';
-import { TeamTask } from './TeamTask';
+import { Task } from './Task';
 
 @Entity('task_assign')
 export class TaskAssign extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => TeamTask)
-  @JoinColumn({ name: 'teamTaskId' })
-  teamTask: TeamTask;
+  @ManyToOne(() => Task)
+  @JoinColumn({ name: 'taskId' })
+  task: Task;
 
   @Column()
-  temaTaskId: number;
+  taskId: number;
 
   @ManyToOne(() => Member)
   @JoinColumn({ name: 'memberId' })
@@ -27,9 +27,6 @@ export class TaskAssign extends BasicDate {
 
   @Column()
   memberId: number;
-
-  @Column()
-  remindTime: number;
 
   @Column()
   memo: string;

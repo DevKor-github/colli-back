@@ -1,15 +1,39 @@
-import { TeamSchedule, UserSchedule } from 'src/entities';
+import { Schedule } from 'src/entities';
 import { DataSource, Repository } from 'typeorm';
-import { UserScheduleResDto } from './dto/userScheduleRes.dto';
-import { TeamScheduleResDto } from './dto/teamScheduleRes.dto';
+import { ScheduleResDto } from './dto/scheduleRes.dto';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class UserScheduleRepository extends Repository<UserSchedule> {
+export class ScheduleRepository extends Repository<Schedule> {
   constructor(private dataSource: DataSource) {
-    super(UserSchedule, dataSource.createEntityManager());
+    super(Schedule, dataSource.createEntityManager());
   }
 
+  async findScheduleDetail(scheduleId: number): Promise<ScheduleResDto> {
+    return this.findOneByOrFail({ id: scheduleId }).then((data) =>
+      ScheduleResDto.makeRes(data),
+    );
+  }
+
+  async findScheduleCalendar(
+    teamId: number,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<ScheduleResDto[]> {
+    const scheduleList = await this.createQueryBuilder('team_schedule')
+      .leftJoinAndSelect('team_schedule.team', 'team')
+      .where('team_schedule.teamId = :teamId', { teamId })
+      .andWhere(
+        '!(team_schedule.endTime < :startDate or team_schedule.startTime >= :endDate)',
+        { startDate, endDate },
+      )
+      .getMany();
+    // console.log(scheduleList);
+
+    return scheduleList.map((sc) => ScheduleResDto.makeRes(sc));
+  }
+
+  /*
   async findUserScheduleDetail(
     scheduleId: number,
   ): Promise<UserScheduleResDto> {
@@ -28,51 +52,5 @@ export class UserScheduleRepository extends Repository<UserSchedule> {
       .getMany();
 
     return scheduleList.map((sc) => UserScheduleResDto.makeRes(sc));
-  }
-}
-
-@Injectable()
-export class TeamScheduleRepository extends Repository<TeamSchedule> {
-  constructor(private dataSource: DataSource) {
-    super(TeamSchedule, dataSource.createEntityManager());
-  }
-
-  async findTeamScheduleDetail(
-    scheduleId: number,
-    color: number,
-  ): Promise<TeamScheduleResDto> {
-    return this.findOneByOrFail({ id: scheduleId }).then((data) =>
-      TeamScheduleResDto.makeRes(data, color),
-    );
-  }
-
-  async findTeamCalendar(
-    teamId: number,
-    startDate: Date,
-    endDate: Date,
-    color: number = 0,
-  ): Promise<TeamScheduleResDto[]> {
-    // console.log(
-    //   await this.createQueryBuilder('team_schedule')
-    //     .leftJoinAndSelect('team_schedule.team', 'team')
-    //     .where('team_schedule.teamId = :teamId', { teamId })
-    //     .andWhere(
-    //       '!(team_schedule.endTime < :startDate or team_schedule.startTime >= :endDate)',
-    //       { startDate, endDate },
-    //     )
-    //     .getQuery(),
-    // );
-
-    const scheduleList = await this.createQueryBuilder('team_schedule')
-      .leftJoinAndSelect('team_schedule.team', 'team')
-      .where('team_schedule.teamId = :teamId', { teamId })
-      .andWhere(
-        '!(team_schedule.endTime < :startDate or team_schedule.startTime >= :endDate)',
-        { startDate, endDate },
-      )
-      .getMany();
-    // console.log(scheduleList);
-
-    return scheduleList.map((sc) => TeamScheduleResDto.makeRes(sc, color));
-  }
+  } */
 }
