@@ -11,6 +11,9 @@ import {
 import { TaskService } from './task.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
+import { TaskDetailResDto } from './dtos/taskDetailRes.dto';
+import { ListResDto } from 'src/common/dto/listRes.dto';
+import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
 
 // 일단 개인/팀 태스크 api 싹 분리해보자
 @ApiTags('task')
@@ -18,24 +21,40 @@ import { MsgResDto } from 'src/common/dto/msgRes.dto';
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  // 유저 페이지, 팀 페이지에서 동시에 호출할 수 있음.
+  //하위태스크 목록만 refresh가능하게 한다면 api 분리가 낫고 그게 아니면 그냥 합치는게 나을 것 같긴함.
   @Get('/team/:taskId')
-  @ApiOkResponse({ description: '팀 태스크 상세 조회' })
-  async getTaskDetail(@Param('taskId') taskId: number) {}
+  @ApiOkResponse({ type: TaskDetailResDto, description: '태스크 상세 조회' })
+  async getTaskDetail(
+    @Param('taskId') taskId: number,
+  ): Promise<TaskDetailResDto> {
+    return this.taskService.getTaskDetail(taskId);
+  }
 
   // 조회하는 사람이 팀에 속한 멤버인지 검증하는 로직 필요
-  @Get('/list/team/:teamId/:tokenId')
-  @ApiOkResponse({ description: '태스크 목록 조회(팀 페이지)' })
-  async getTaskListByTeamId(
+  @Get('/list/team/:teamId')
+  @ApiOkResponse({
+    type: ListResDto,
+    description: '태스크 목록 조회(팀 페이지)',
+  })
+  async getTaskListByTeamIdAndState(
     @Param('teamId') teamId: number,
-    @Param('tokenId') tokenId: number,
-    @Query('isComplete') isComplete: boolean,
-  ) {}
+    @Query('state') state: string,
+  ): Promise<ListResDto<TaskListItemResDto>> {
+    try {
+      if (state == 'todo')
+        return this.taskService.getTaskListByTeamIdAndState(teamId, 0);
+      else if (state == 'done')
+        return this.taskService.getTaskListByTeamIdAndState(teamId, 2);
+      else return this.taskService.getTaskListByTeamIdAndState(teamId, 1);
+    } catch (err) {
+      return err;
+    }
+  }
 
   // 팀에 속한 멤버인지검증 필요
   @Post('/team/add')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 추가' })
-  async addTask(@Body() addTeamTaskReqDto) {}
+  async addTask(@Body() addTaskReqDto) {}
 
   // 팀에 속한 멤버인지검증 필요
   @Patch('/team/modify/:taskId')
