@@ -14,6 +14,8 @@ import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { TaskDetailResDto } from './dtos/taskDetailRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
+import { AddTaskReqDto } from './dtos/addTaskReq.dto';
+import { AddSubTaskReqDto } from './dtos/addSubTaskReq.dto';
 
 // 일단 개인/팀 태스크 api 싹 분리해보자
 @ApiTags('task')
@@ -27,7 +29,11 @@ export class TaskController {
   async getTaskDetail(
     @Param('taskId') taskId: number,
   ): Promise<TaskDetailResDto> {
-    return this.taskService.getTaskDetail(taskId);
+    try {
+      return this.taskService.getTaskDetail(taskId);
+    } catch (err) {
+      throw err;
+    }
   }
 
   // 조회하는 사람이 팀에 속한 멤버인지 검증하는 로직 필요
@@ -47,14 +53,37 @@ export class TaskController {
         return this.taskService.getTaskListByTeamIdAndState(teamId, 2);
       else return this.taskService.getTaskListByTeamIdAndState(teamId, 1);
     } catch (err) {
-      return err;
+      throw err;
     }
   }
 
   // 팀에 속한 멤버인지검증 필요
   @Post('/team/add')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 추가' })
-  async addTask(@Body() addTaskReqDto) {}
+  async addTask(
+    @Param('teamId') teamId: number,
+    @Body() addTaskReqDto: AddTaskReqDto,
+  ) {
+    try {
+      return this.taskService.addTask(teamId, addTaskReqDto);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  @Post('/team/add/sub')
+  @ApiOkResponse({ type: MsgResDto, description: '태스크 하위 목록 추가' })
+  async addSubTask(
+    // @Param('teamId') teamId: number,
+    @Param('taskId') taskId: number,
+    @Body() addSubTaskReqDto: AddSubTaskReqDto,
+  ) {
+    try {
+      return this.taskService.addSubTask(taskId, addSubTaskReqDto);
+    } catch (err) {
+      throw err;
+    }
+  }
 
   // 팀에 속한 멤버인지검증 필요
   @Patch('/team/modify/:taskId')
@@ -65,12 +94,11 @@ export class TaskController {
   ) {}
 
   // 팀에 속한 멤버인지검증 필요
-  @Delete('team/remove/:teamId/:taskId/:tokenId')
+  @Delete('team/remove/:teamId/:taskId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 삭제' })
   async removeTask(
     @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-    @Param('tokenId') tokenId: number,
   ) {}
 
   /*

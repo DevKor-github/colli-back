@@ -1,8 +1,9 @@
 import { Member } from 'src/entities';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
 import { GetMemberResDto } from './dto/getMemberRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { Injectable } from '@nestjs/common';
+import { MemberMetaResDto } from './dto/memberMetaRes.dto';
 
 @Injectable()
 export class MemberRepository extends Repository<Member> {
@@ -20,5 +21,13 @@ export class MemberRepository extends Repository<Member> {
       dataList: data.map((e) => GetMemberResDto.makeRes(e)),
       totalCount: count,
     }));
+  }
+
+  async findMemberByOptions(where: FindOptionsWhere<Member>) {
+    return this.findOneByOrFail(where)
+      .then((data) => MemberMetaResDto.makeRes(data))
+      .catch(() => {
+        throw new Error('소속된 팀이 아닙니다.');
+      });
   }
 }
