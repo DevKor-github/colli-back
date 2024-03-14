@@ -25,6 +25,9 @@ export class TaskDetailResDto {
   @ApiProperty({ description: '진행상태(%)' })
   progress: number;
 
+  @ApiProperty({ description: '작성 날짜' })
+  createdAt: Date;
+
   // 뭐가 더 나을지 잘 모르겠네
   // @ApiProperty({ description: '하위 태스크 목록' })
   // subTaskList: ListResDto<>;
@@ -42,6 +45,7 @@ export class TaskDetailResDto {
     resData.assignee = data.member.user;
     resData.deadline = data.deadline;
     resData.progress = data.progress;
+    resData.createdAt = data.createdAt;
 
     return resData;
   }

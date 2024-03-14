@@ -14,8 +14,8 @@ import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { TaskDetailResDto } from './dtos/taskDetailRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
-import { AddTaskReqDto } from './dtos/addTaskReq.dto';
-import { AddSubTaskReqDto } from './dtos/addSubTaskReq.dto';
+import { TaskReqDto } from './dtos/taskReq.dto';
+import { SubTaskReqDto } from './dtos/subTaskReq.dto';
 
 // 일단 개인/팀 태스크 api 싹 분리해보자
 @ApiTags('task')
@@ -58,12 +58,13 @@ export class TaskController {
   }
 
   // 팀에 속한 멤버인지검증 필요
+  // 라우팅 수정하면 /team/teamId/task/add
   @Post('/team/add')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 추가' })
   async addTask(
     @Param('teamId') teamId: number,
-    @Body() addTaskReqDto: AddTaskReqDto,
-  ) {
+    @Body() addTaskReqDto: TaskReqDto,
+  ): Promise<MsgResDto> {
     try {
       return this.taskService.addTask(teamId, addTaskReqDto);
     } catch (err) {
@@ -71,13 +72,15 @@ export class TaskController {
     }
   }
 
+  // 라우팅 수정하면 /team/teamId/task/taskId/addSub
   @Post('/team/add/sub')
   @ApiOkResponse({ type: MsgResDto, description: '태스크 하위 목록 추가' })
   async addSubTask(
+    // teamId를 쓸 일이 있을까?
     // @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-    @Body() addSubTaskReqDto: AddSubTaskReqDto,
-  ) {
+    @Body() addSubTaskReqDto: SubTaskReqDto,
+  ): Promise<MsgResDto> {
     try {
       return this.taskService.addSubTask(taskId, addSubTaskReqDto);
     } catch (err) {
@@ -86,12 +89,34 @@ export class TaskController {
   }
 
   // 팀에 속한 멤버인지검증 필요
+  // 라우팅 수정하면 /team/teamId/task/modify/taskId
   @Patch('/team/modify/:taskId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 수정' })
   async modifyTask(
+    @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-    @Body() modifyTeamTaskReqDto,
-  ) {}
+    @Body() modifyTaskReqDto: TaskReqDto,
+  ) {
+    try {
+      return this.taskService.modifyTask(teamId, taskId, modifyTaskReqDto);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // 라우팅 수정하면 /team/teamId/task/modifySub/subTaskId
+  @Patch('/team/modify/sub')
+  @ApiOkResponse({ type: MsgResDto, description: '서브 태스크 수정' })
+  async modifySubTask(
+    @Param('subTaskId') subTaskId: number,
+    @Body() modifySubTaskReqDto: SubTaskReqDto,
+  ) {
+    try {
+      return this.taskService.modifySubTask(subTaskId, modifySubTaskReqDto);
+    } catch (err) {
+      throw err;
+    }
+  }
 
   // 팀에 속한 멤버인지검증 필요
   @Delete('team/remove/:teamId/:taskId')
@@ -100,6 +125,10 @@ export class TaskController {
     @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
   ) {}
+
+  @Delete('subtaskDelete')
+  @ApiOkResponse({ type: MsgResDto, description: '서브 태스크 삭제' })
+  async removeSubTask(@Param('subTaskId') subTaskId: number) {}
 
   /*
   // 여기 아래 부터는 유저 페이지에서만 호출하는 api

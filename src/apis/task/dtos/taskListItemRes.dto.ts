@@ -14,6 +14,9 @@ export class TaskListItemResDto {
   @ApiProperty({ description: '마감기한' })
   deadline: Date;
 
+  @ApiProperty({ description: '작성 일자' })
+  createdAt: Date;
+
   static makeRes(data: Task) {
     const resData = new TaskListItemResDto();
 
@@ -21,6 +24,7 @@ export class TaskListItemResDto {
     resData.category = data.taskCategory.categoryName;
     resData.assignee = data.member.user.name;
     resData.deadline = data.deadline;
+    resData.createdAt = data.createdAt;
 
     return resData;
   }

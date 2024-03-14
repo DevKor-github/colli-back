@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AddSubTaskReqDto {
+export class SubTaskReqDto {
   @ApiProperty({ description: '하위 태스크 제목' })
   subtitle: string;
 

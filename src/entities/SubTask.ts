@@ -10,6 +10,7 @@ import { BasicDate } from './BasicDate';
 import { Task } from './Task';
 import { Photo } from './Photo';
 
+//taskProgressDetail??
 @Entity('sub_task')
 export class SubTask extends BasicDate {
   @PrimaryGeneratedColumn()

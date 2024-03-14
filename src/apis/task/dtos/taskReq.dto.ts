@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AddTaskReqDto {
+export class TaskReqDto {
   @ApiProperty({ description: '제목' })
   title: string;
 
