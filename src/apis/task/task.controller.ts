@@ -16,12 +16,16 @@ import { ListResDto } from 'src/common/dto/listRes.dto';
 import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
 import { TaskReqDto } from './dtos/taskReq.dto';
 import { SubTaskReqDto } from './dtos/subTaskReq.dto';
+import { MemberService } from '../member/member.service';
 
 // 일단 개인/팀 태스크 api 싹 분리해보자
 @ApiTags('task')
 @Controller('task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly memberService: MemberService,
+  ) {}
 
   //하위태스크 목록만 refresh가능하게 한다면 api 분리가 낫고 그게 아니면 그냥 합치는게 나을 것 같긴함.
   @Get('/team/:taskId')
@@ -124,11 +128,36 @@ export class TaskController {
   async removeTask(
     @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-  ) {}
+  ) {
+    try {
+      return this.taskService.removeTask(taskId);
+    } catch (err) {
+      throw err;
+    }
+  }
 
   @Delete('subtaskDelete')
   @ApiOkResponse({ type: MsgResDto, description: '서브 태스크 삭제' })
-  async removeSubTask(@Param('subTaskId') subTaskId: number) {}
+  async removeSubTask(@Param('subTaskId') subTaskId: number) {
+    try {
+      return this.taskService.removeSubTask(subTaskId);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // 기한이 얼마 남지 않은 과제
+  @Get('')
+  @ApiOkResponse({ description: '가장 급한 과제' })
+  async getUrgentTask(userId: number): Promise<TaskDetailResDto> {
+    try {
+      // 가입한 팀의 memberId 배열
+      // const joinList = await this.memberService.getUserBelongingList(userId);
+      return this.taskService.getUrgentTask(userId, new Date());
+    } catch (err) {
+      throw err;
+    }
+  }
 
   /*
   // 여기 아래 부터는 유저 페이지에서만 호출하는 api

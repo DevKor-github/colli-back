@@ -58,4 +58,10 @@ export class MemberService {
 
     return MsgResDto.ret();
   }
+
+  async getUserBelongingList(userId: number): Promise<number[]> {
+    return this.memberRepository
+      .findBy({ userId })
+      .then((datas) => datas.map((dt) => dt.id));
+  }
 }

@@ -27,7 +27,7 @@ export class MemberRepository extends Repository<Member> {
     return this.findOneByOrFail(where)
       .then((data) => MemberMetaResDto.makeRes(data))
       .catch(() => {
-        throw new Error('소속된 팀이 아닙니다.');
+        throw new Error();
       });
   }
 }

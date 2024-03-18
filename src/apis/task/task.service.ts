@@ -7,10 +7,12 @@ import { TaskReqDto } from './dtos/taskReq.dto';
 import { MemberService } from '../member/member.service';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { SubTaskReqDto } from './dtos/subTaskReq.dto';
+import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class TaskService {
   constructor(
+    // 멤버 서비스 사용을 여기서 해야할까?
     private readonly memberService: MemberService,
     private readonly taskRepository: TaskReposiotry,
     private readonly subTaskRepository: SubTaskRepository,
@@ -92,11 +94,11 @@ export class TaskService {
 
   // memberId를 위에서 들고내려올 수 있을까?
   // 애초에 api 실행 시작때, 관리자거나 담당자가 아니면 태스크를 삭제하지 못하게 막아버린다면? 굳이 멤버검증이 필요할까
-  async removeTask(taskId: number, memberId: number) {
+  async removeTask(taskId: number, memberId?: number): Promise<MsgResDto> {
     // 1. 가지고 내려온 memberId가 manager권한을 가지고 있는지 확인 -> 가지고 있으면 task가 존재하는지만 확인, 없으면 2번으로
     // 2. 담당 member인지 확인
     await this.taskRepository
-      .findOneByOrFail({ id: taskId, memberId })
+      .findOneByOrFail({ id: taskId /*, memberId*/ })
       .catch(() => {
         throw Error();
       });
@@ -106,5 +108,50 @@ export class TaskService {
     return MsgResDto.ret();
   }
 
-  async removeSubTask() {}
+  async removeSubTask(
+    subTaskId: number,
+    memberId?: number,
+  ): Promise<MsgResDto> {
+    await this.subTaskRepository
+      .findOneOrFail({
+        relations: { task: true },
+        where: {
+          id: subTaskId,
+          // task: {
+          //   memberId,
+          // },
+        },
+      })
+      .catch(() => {
+        throw Error();
+      });
+
+    await this.subTaskRepository.softRemove({ id: subTaskId });
+
+    return MsgResDto.ret();
+  }
+
+  async getUrgentTask(userId, criteria: Date): Promise<TaskDetailResDto> {
+    // 팀별로 가장 급한 task 하나씩 뽑기 - 이거말고 userId 받아와서 join한 다음에 task 전체를 두고 뽑는게 나을려나??
+    const urgentTask = await this.taskRepository.find({
+      take: 1,
+      where: {
+        state: 1,
+        deadline: MoreThan(criteria),
+        member: {
+          userId,
+        },
+      },
+      relations: {
+        member: true,
+      },
+      order: {
+        deadline: 'DESC',
+      },
+    });
+
+    if (!urgentTask.length) return TaskDetailResDto.empty();
+
+    return TaskDetailResDto.makeRes(urgentTask[0]);
+  }
 }

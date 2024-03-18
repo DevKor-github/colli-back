@@ -37,7 +37,7 @@ export class Task extends BasicDate {
   @Column()
   categoryId: number;
 
-  //이거 진행상태인데 enum 하나 만드는거 나쁘지않아 보임.
+  // 0: To Do, 1: In Progress, 2: Done
   @Column()
   state: number;
 

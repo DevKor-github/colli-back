@@ -3,6 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Task, User } from 'src/entities';
 
 export class TaskDetailResDto {
+  @ApiProperty({ description: 'id' })
+  id: number;
+
   @ApiProperty({ description: '제목' })
   title: string;
 
@@ -35,9 +38,10 @@ export class TaskDetailResDto {
   static makeRes(data: Task) {
     const resData = new TaskDetailResDto();
 
-    // 나중에 빼자 진짜 개같은 코드임 이거
+    // 나중에 빼자 진짜 개같은 코드임 이거 -> enum으로 하면 좋을듯
     const stateArr = ['To do', 'In progress', 'Done'];
 
+    resData.id = data.id;
     resData.title = data.title;
     resData.content = data.content;
     resData.category = data.taskCategory.categoryName;
@@ -48,5 +52,10 @@ export class TaskDetailResDto {
     resData.createdAt = data.createdAt;
 
     return resData;
+  }
+
+  static empty() {
+    // 이거 잘 될라나? 결과 보고 이상하면 수정하자 귀찮다.
+    return new TaskDetailResDto();
   }
 }
