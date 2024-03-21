@@ -15,7 +15,7 @@ import { TeamReqDto } from './dto/teamReq.dto';
 import { TeamResDto } from './dto/teamRes.dto';
 
 @ApiTags('task')
-@Controller('task')
+@Controller()
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 

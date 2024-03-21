@@ -13,7 +13,7 @@ import { MoreThan } from 'typeorm';
 export class TaskService {
   constructor(
     // 멤버 서비스 사용을 여기서 해야할까?
-    private readonly memberService: MemberService,
+    // private readonly memberService: MemberService,
     private readonly taskRepository: TaskReposiotry,
     private readonly subTaskRepository: SubTaskRepository,
   ) {}
@@ -41,7 +41,7 @@ export class TaskService {
   async addTask(teamId: number, req: TaskReqDto) {
     const { memberId } = req;
     // task할당해줄 담당자가 멤버인지 확인
-    await this.memberService.checkIsMemberByMemberIdAndTeamId(memberId, teamId);
+    // await this.memberService.checkIsMemberByMemberIdAndTeamId(memberId, teamId);
 
     await this.taskRepository.insert({
       teamId,
@@ -70,7 +70,7 @@ export class TaskService {
       throw Error();
     });
     // task 할당자 멤버 여부 확인
-    await this.memberService.checkIsMemberByMemberIdAndTeamId(memberId, teamId);
+    // await this.memberService.checkIsMemberByMemberIdAndTeamId(memberId, teamId);
 
     await this.taskRepository.update({ id: taskId }, { ...req });
 

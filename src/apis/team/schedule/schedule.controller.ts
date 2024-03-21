@@ -14,13 +14,13 @@ import { MemberService } from '../member/member.service';
 import { ScheduleResDto } from './dto/scheduleRes.dto';
 import { GetCalendarReqDto } from './dto/getCalendarReq.dto';
 import { ScheduleReqDto } from './dto/scheduleReq.dto';
-import { UserService } from '../user/user.service';
+import { UserService } from '../../user/user.service';
 import { CalendarCountResDto } from './dto/calendarCountRes.dto';
 import { DateCalendarResDto } from './dto/dateCalendarRes.dto';
 
 // 결국에 team/teamId를 빼내는 라우팅으로 변경을 하는게 맞을거 같음
 @ApiTags('schedule')
-@Controller('schedule')
+@Controller()
 export class ScheduleController {
   constructor(
     private readonly scheduleService: ScheduleService,
