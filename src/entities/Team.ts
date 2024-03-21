@@ -13,8 +13,5 @@ export class Team extends BasicDate {
   description: string;
 
   @Column()
-  deadline: string;
-
-  @Column()
   code: string;
 }

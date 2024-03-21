@@ -9,6 +9,8 @@ import { MemberMetaResDto } from './dto/memberMetaRes.dto';
 export class MemberService {
   constructor(private readonly memberRepository: MemberRepository) {}
 
+  //여기 함수들 전반적으로 점검 한번 해야함.
+
   // memberMeta 정보가 필요한 경우 data를 받아서 사용하면 되고, 굳이 필요하지 않다면
   // 그냥 await checkIsMember(); 이런 식으로만 사용해도 된다.
   async checkIsMember(
