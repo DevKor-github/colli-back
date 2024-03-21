@@ -1,4 +1,3 @@
-import { CreateTeamReqDto } from './dto/createTeamReq.dto';
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './team.repository';
 import { TeamResDto } from './dto/teamRes.dto';
@@ -13,7 +12,7 @@ export class TeamService {
     return this.teamRepository.findTeamDetail(teamId);
   }
 
-  async createTeam(req: CreateTeamReqDto) {
+  async createTeam(req: TeamReqDto) {
     await this.teamRepository.insert(req);
     return MsgResDto.ret();
   }

@@ -10,7 +10,6 @@ import {
 import { TeamService } from './team.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
-import { CreateTeamReqDto } from './dto/createTeamReq.dto';
 import { TeamReqDto } from './dto/teamReq.dto';
 import { TeamResDto } from './dto/teamRes.dto';
 
@@ -19,22 +18,20 @@ import { TeamResDto } from './dto/teamRes.dto';
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
-  @Get('/team/:teamId')
+  @Get('/:teamId')
   @ApiOkResponse({ description: '팀 정보 조회' })
   async getTeamDetail(@Param('teamId') teamId: number): Promise<TeamResDto> {
     return this.teamService.getTeamDetail(teamId);
   }
 
   //만드는 유저는 member 테이블에 isManager를 줘야함
-  @Post('/team/create')
+  @Post('/create')
   @ApiOkResponse({ type: MsgResDto, description: '팀 생성' })
-  async createTeam(
-    @Body() createTeamReqDto: CreateTeamReqDto,
-  ): Promise<MsgResDto> {
+  async createTeam(@Body() createTeamReqDto: TeamReqDto): Promise<MsgResDto> {
     return this.teamService.createTeam(createTeamReqDto);
   }
 
-  @Patch('/team/:teamId/modify')
+  @Patch('/:teamId/modify')
   @ApiOkResponse({ type: MsgResDto, description: '팀 정보 수정' })
   async modifyTeamDetail(
     @Param('teamId') teamId: number,
@@ -44,7 +41,7 @@ export class TeamController {
   }
 
   //isManager 권한이 있는 유저만 가능
-  @Delete('/team/:teamId/remove')
+  @Delete('/:teamId/remove')
   @ApiOkResponse({ type: MsgResDto, description: '팀 삭제' })
   async removeTeam(@Param('teamId') teamId: number): Promise<MsgResDto> {
     return this.teamService.removeTeam(teamId);
