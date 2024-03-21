@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { DateResDto } from 'src/common/dto/dateRes.dto';
 import { Team } from 'src/entities';
 
-export class TeamResDto {
+export class TeamResDto extends DateResDto {
   @ApiProperty({ description: '팀 id' })
   id: number;
 
@@ -10,9 +11,6 @@ export class TeamResDto {
 
   @ApiProperty({ description: '팀 소개' })
   description: string;
-
-  @ApiProperty({ description: '마감 기한' }) //?
-  deadline: string;
 
   @ApiProperty({ description: '팀 코드' }) //?
   code: string;
@@ -23,8 +21,10 @@ export class TeamResDto {
     resData.id = data.id;
     resData.name = data.name;
     resData.description = data.description;
-    resData.deadline = data.deadline;
     resData.code = data.code;
+    resData.createdAt = data.createdAt;
+    resData.updatedAt = data.updatedAt;
+    resData.deletedAt = data.deletedAt;
 
     return resData;
   }

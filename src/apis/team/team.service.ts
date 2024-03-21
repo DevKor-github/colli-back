@@ -9,27 +9,27 @@ export class TeamService {
   constructor(private readonly teamRepository: TeamRepository) {}
 
   async getTeamDetail(teamId: number): Promise<TeamResDto> {
-    return this.teamRepository.findTeamDetail(teamId);
+    return this.teamRepository
+      .findOneWithOptionOrFail({ id: teamId })
+      .then((data) => TeamResDto.makeRes(data));
   }
 
-  async createTeam(req: TeamReqDto) {
+  //중복검사 로직 필요하다.
+  async addTeam(req: TeamReqDto) {
     await this.teamRepository.insert(req);
     return MsgResDto.ret();
   }
 
   async modifyTeamDetail(req: TeamReqDto, teamId: number) {
-    await this.teamRepository.findOneByOrFail({
-      id: teamId,
-    });
+    await this.teamRepository.findOneWithOptionOrFail({ id: teamId });
+
     await this.teamRepository.update({ id: teamId }, { ...req });
 
     return MsgResDto.ret();
   }
 
   async removeTeam(teamId: number): Promise<MsgResDto> {
-    await this.teamRepository.findOneByOrFail({
-      id: teamId,
-    });
+    await this.teamRepository.findOneWithOptionOrFail({ id: teamId });
 
     await this.teamRepository.softRemove({
       id: teamId,

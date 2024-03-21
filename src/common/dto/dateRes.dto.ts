@@ -5,7 +5,7 @@ export abstract class DateResDto {
   createdAt: Date;
 
   @ApiProperty({ description: 'modifiedAt' })
-  modifiedAt: Date;
+  updatedAt: Date;
 
   @ApiProperty({ description: 'deletedAt' })
   deletedAt: Date;
