@@ -21,6 +21,15 @@ export class AuthUser extends BasicDate {
   @Column()
   userId: number;
 
+  /**
+   로그인 아이디
+   */
+  @Column()
+  userName: string;
+
+  @Column()
+  password: string;
+
   @Column()
   accessToken: string;
 
