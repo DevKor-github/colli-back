@@ -13,5 +13,11 @@ export class User extends BasicDate {
   phoneNum: string;
 
   @Column()
+  university: string;
+
+  @Column()
+  introduction: string;
+
+  @Column()
   evaluation: number;
 }

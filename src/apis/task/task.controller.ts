@@ -21,7 +21,7 @@ export class TaskController {
   // 유저 페이지, 팀 페이지에서 동시에 호출할 수 있음.
   @Get('/team/:taskId')
   @ApiOkResponse({ description: '팀 태스크 상세 조회' })
-  async getTeamTaskDetail(@Param('taskId') taskId: number) {}
+  async getTaskDetail(@Param('taskId') taskId: number) {}
 
   // 조회하는 사람이 팀에 속한 멤버인지 검증하는 로직 필요
   @Get('/list/team/:teamId/:tokenId')
@@ -35,12 +35,12 @@ export class TaskController {
   // 팀에 속한 멤버인지검증 필요
   @Post('/team/add')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 추가' })
-  async addTeamTask(@Body() addTeamTaskReqDto) {}
+  async addTask(@Body() addTeamTaskReqDto) {}
 
   // 팀에 속한 멤버인지검증 필요
   @Patch('/team/modify/:taskId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 수정' })
-  async modifyTeamTask(
+  async modifyTask(
     @Param('taskId') taskId: number,
     @Body() modifyTeamTaskReqDto,
   ) {}
@@ -48,12 +48,13 @@ export class TaskController {
   // 팀에 속한 멤버인지검증 필요
   @Delete('team/remove/:teamId/:taskId/:tokenId')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 삭제' })
-  async removeTeamTask(
+  async removeTask(
     @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
     @Param('tokenId') tokenId: number,
   ) {}
 
+  /*
   // 여기 아래 부터는 유저 페이지에서만 호출하는 api
   @Get('/user/:taskId/:tokenId')
   @ApiOkResponse({ description: '개인 태스크 상세 조회' })
@@ -91,4 +92,5 @@ export class TaskController {
     @Param('taskId') taskId: number,
     @Param('tokenId') tokenId: number,
   ) {}
+  */
 }

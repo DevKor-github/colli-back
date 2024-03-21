@@ -6,26 +6,26 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BasicDate } from './BasicDate';
-import { Team } from './Team';
+import { Task } from './Task';
 
-@Entity('task')
-export class Task extends BasicDate {
+@Entity('sub_task')
+export class SubTask extends BasicDate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Team)
-  @JoinColumn({ name: 'teamId' })
-  team: Team;
+  @ManyToOne(() => Task)
+  @JoinColumn({ name: 'taskId' })
+  task: Task;
 
   @Column()
-  teamId: number;
+  taskId: number;
 
   @Column()
-  title: string;
+  subTitle: string;
 
   @Column()
   content: string;
 
   @Column()
-  deadline: string;
+  progress: number;
 }
