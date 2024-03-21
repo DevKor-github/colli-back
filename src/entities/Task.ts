@@ -7,7 +7,11 @@ import {
 } from 'typeorm';
 import { BasicDate } from './BasicDate';
 import { Team } from './Team';
+import { TaskCategory } from './TaskCategory';
+import { Member } from './Member';
 
+//일단은 개별 담당자로 만드는중..
+//만약 나중에 담당자를 여러명으로 돌릴 생각이라면 좀 수정해야함.
 @Entity('task')
 export class Task extends BasicDate {
   @PrimaryGeneratedColumn()
@@ -26,6 +30,28 @@ export class Task extends BasicDate {
   @Column()
   content: string;
 
+  @ManyToOne(() => TaskCategory)
+  @JoinColumn({ name: 'categoryId' })
+  taskCategory: TaskCategory;
+
   @Column()
-  deadline: string;
+  categoryId: number;
+
+  // 0: To Do, 1: In Progress, 2: Done
+  @Column()
+  state: number;
+
+  @ManyToOne(() => Member)
+  @JoinColumn({ name: 'memberId' })
+  member: Member;
+
+  @Column()
+  memberId: number;
+
+  @Column()
+  deadline: Date;
+
+  //이 진척도는 단순 콕찌르는 용인가???
+  @Column()
+  progress: number;
 }

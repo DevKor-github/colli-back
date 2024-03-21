@@ -3,11 +3,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BasicDate } from './BasicDate';
 import { Task } from './Task';
+import { Photo } from './Photo';
 
+//taskProgressDetail??
 @Entity('sub_task')
 export class SubTask extends BasicDate {
   @PrimaryGeneratedColumn()
@@ -26,6 +29,7 @@ export class SubTask extends BasicDate {
   @Column()
   content: string;
 
-  @Column()
-  progress: number;
+  // @OneToMany()
+  // @Column()
+  // photos: Photo[]
 }

@@ -15,12 +15,12 @@ export class MemberService {
     teamId: number,
     userId: number,
   ): Promise<MemberMetaResDto> {
-    return this.memberRepository
-      .findOneByOrFail({ userId, teamId })
-      .then((data) => MemberMetaResDto.makeRes(data))
-      .catch(() => {
-        throw new Error('소속된 팀이 아닙니다.');
-      });
+    return this.memberRepository.findMemberByOptions({ teamId, userId });
+  }
+
+  // 임시 함수로 씀
+  async checkIsMemberByMemberIdAndTeamId(memberId: number, teamId) {
+    return this.memberRepository.findMemberByOptions({ id: memberId, teamId });
   }
 
   async checkIsManager(
@@ -57,5 +57,11 @@ export class MemberService {
     await this.memberRepository.softRemove(memberToBeRemoved);
 
     return MsgResDto.ret();
+  }
+
+  async getUserBelongingList(userId: number): Promise<number[]> {
+    return this.memberRepository
+      .findBy({ userId })
+      .then((datas) => datas.map((dt) => dt.id));
   }
 }
