@@ -4,16 +4,12 @@ import { ScheduleResDto } from './dto/scheduleRes.dto';
 import { GetCalendarReqDto } from './dto/getCalendarReq.dto';
 import { ScheduleReqDto } from './dto/scheduleReq.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
-import { MemberRepository } from '../member/member.repository';
 import { DateCalendarResDto } from './dto/dateCalendarRes.dto';
 import { CalendarCountResDto } from './dto/calendarCountRes.dto';
 
 @Injectable()
 export class ScheduleService {
-  constructor(
-    private readonly scheduleRepository: ScheduleRepository,
-    private readonly memberRepository: MemberRepository,
-  ) {}
+  constructor(private readonly scheduleRepository: ScheduleRepository) {}
 
   async getScheduleDetail(scheduleId: number): Promise<ScheduleResDto> {
     return this.scheduleRepository.findScheduleDetail(scheduleId);
