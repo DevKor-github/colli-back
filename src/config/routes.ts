@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@nestjs/core';
+import { RouterModule } from '@nestjs/core';
 import { AuthModule } from 'src/apis/auth/auth.module';
 import { MemberModule } from 'src/apis/team/member/member.module';
 import { ScheduleModule } from 'src/apis/team/schedule/schedule.module';
