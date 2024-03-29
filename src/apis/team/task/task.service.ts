@@ -4,7 +4,6 @@ import { TaskDetailResDto } from './dtos/taskDetailRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
 import { TaskReqDto } from './dtos/taskReq.dto';
-import { MemberService } from '../member/member.service';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { SubTaskReqDto } from './dtos/subTaskReq.dto';
 import { MoreThan } from 'typeorm';
@@ -12,8 +11,6 @@ import { MoreThan } from 'typeorm';
 @Injectable()
 export class TaskService {
   constructor(
-    // 멤버 서비스 사용을 여기서 해야할까?
-    // private readonly memberService: MemberService,
     private readonly taskRepository: TaskReposiotry,
     private readonly subTaskRepository: SubTaskRepository,
   ) {}
@@ -39,10 +36,6 @@ export class TaskService {
   }
 
   async addTask(teamId: number, req: TaskReqDto) {
-    const { memberId } = req;
-    // task할당해줄 담당자가 멤버인지 확인
-    // await this.memberService.checkIsMemberByMemberIdAndTeamId(memberId, teamId);
-
     await this.taskRepository.insert({
       teamId,
       ...req,
@@ -64,13 +57,10 @@ export class TaskService {
     taskId: number,
     req: TaskReqDto,
   ): Promise<MsgResDto> {
-    const { memberId } = req;
     // 수정 대상 확인
     await this.taskRepository.findOneByOrFail({ id: taskId }).catch(() => {
       throw Error();
     });
-    // task 할당자 멤버 여부 확인
-    // await this.memberService.checkIsMemberByMemberIdAndTeamId(memberId, teamId);
 
     await this.taskRepository.update({ id: taskId }, { ...req });
 
@@ -94,9 +84,7 @@ export class TaskService {
 
   // memberId를 위에서 들고내려올 수 있을까?
   // 애초에 api 실행 시작때, 관리자거나 담당자가 아니면 태스크를 삭제하지 못하게 막아버린다면? 굳이 멤버검증이 필요할까
-  async removeTask(taskId: number, memberId?: number): Promise<MsgResDto> {
-    // 1. 가지고 내려온 memberId가 manager권한을 가지고 있는지 확인 -> 가지고 있으면 task가 존재하는지만 확인, 없으면 2번으로
-    // 2. 담당 member인지 확인
+  async removeTask(taskId: number): Promise<MsgResDto> {
     await this.taskRepository
       .findOneByOrFail({ id: taskId /*, memberId*/ })
       .catch(() => {

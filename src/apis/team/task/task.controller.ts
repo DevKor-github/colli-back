@@ -39,13 +39,11 @@ export class TaskController {
     }
   }
 
-  // 하위태스크 조회 왜 없댜?
-
   // 조회하는 사람이 팀에 속한 멤버인지 검증하는 로직 필요
   @Get('/list')
   @ApiOkResponse({
     type: ListResDto,
-    description: '태스크 목록 조회(팀 페이지)',
+    description: '태스크 목록 조회',
   })
   async getTaskListByTeamIdAndState(
     @Param('teamId') teamId: number,
@@ -137,7 +135,7 @@ export class TaskController {
     }
   }
 
-  @Delete('/sub/:subTaskId/modify')
+  @Delete('/sub/:subTaskId/remove')
   @ApiOkResponse({ type: MsgResDto, description: '서브 태스크 삭제' })
   async removeSubTask(@Param('subTaskId') subTaskId: number) {
     try {
