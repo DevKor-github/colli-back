@@ -5,12 +5,16 @@ import { Notice } from 'src/entities';
 export class NoticeResDto extends DateResDto {
   @ApiProperty({ description: '공지 id' })
   noticeId: number;
+
   @ApiProperty({ description: '팀 id' })
   teamId: number;
+
   @ApiProperty({ description: '팀 이름' })
   teamName: string;
+
   @ApiProperty({ description: '제목' })
   title: string;
+
   @ApiProperty({ description: '내용' })
   content: string;
 

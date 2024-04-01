@@ -2,14 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { NoticeRepository } from './notice.repository';
 import { NoticeResDto } from './dto/noticeRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
+import { NoticeReqDto } from './dto/noticeReq.dto';
+import { MsgResDto } from 'src/common/dto/msgRes.dto';
 
 @Injectable()
 export class NoticeService {
   constructor(private readonly noticeRepository: NoticeRepository) {}
 
-  async getNoticeDetail(noticeId: number): Promise<NoticeResDto> {
+  async getNoticeDetail(
+    teamId: number,
+    noticeId: number,
+  ): Promise<NoticeResDto> {
     return this.noticeRepository
-      .findOneWithOptionOrFail({ id: noticeId })
+      .findOneWithOptionOrFail({ id: noticeId, teamId })
       .then((data) => NoticeResDto.makeRes(data));
   }
 
@@ -33,7 +38,31 @@ export class NoticeService {
       }));
   }
 
-  async addNotice() {}
-  async modifyNotice() {}
-  async removeNotice() {}
+  async addNotice(req: NoticeReqDto, teamId: number) {
+    return this.noticeRepository
+      .insert({ teamId, ...req })
+      .then(() => MsgResDto.ret());
+  }
+
+  async modifyNotice(req: NoticeReqDto, teamId: number, noticeId: number) {
+    await this.noticeRepository.findOneWithOptionOrFail({
+      id: noticeId,
+      teamId,
+    });
+
+    return this.noticeRepository
+      .update({ id: noticeId, teamId }, { ...req })
+      .then(() => MsgResDto.ret());
+  }
+
+  async removeNotice(teamId: number, noticeId: number) {
+    await this.noticeRepository.findOneWithOptionOrFail({
+      id: noticeId,
+      teamId,
+    });
+
+    return this.noticeRepository
+      .softRemove({ id: noticeId, teamId })
+      .then(() => MsgResDto.ret());
+  }
 }

@@ -1,6 +1,7 @@
 import { RouterModule } from '@nestjs/core';
 import { AuthModule } from 'src/apis/auth/auth.module';
 import { MemberModule } from 'src/apis/team/member/member.module';
+import { NoticeModule } from 'src/apis/team/notice/notice.module';
 import { ScheduleModule } from 'src/apis/team/schedule/schedule.module';
 import { TaskModule } from 'src/apis/team/task/task.module';
 import { TeamModule } from 'src/apis/team/team.module';
@@ -19,6 +20,7 @@ export const ColliRouterModule = RouterModule.register([
       { path: ':teamId/task', module: TaskModule },
       { path: ':teamId/schedule', module: ScheduleModule },
       { path: ':teamId/member', module: MemberModule },
+      { path: ':teamId/notice', module: NoticeModule },
     ],
   },
 ]);
