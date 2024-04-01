@@ -11,14 +11,13 @@ import {
 import { TaskService } from './task.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
-import { TaskDetailResDto } from './dtos/taskDetailRes.dto';
+import { TaskResDto } from './dtos/taskRes.dto';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
 import { TaskReqDto } from './dtos/taskReq.dto';
 import { SubTaskReqDto } from './dtos/subTaskReq.dto';
 // import { MemberService } from '../member/member.service';
 
-// 일단 개인/팀 태스크 api 싹 분리해보자
 @ApiTags('task')
 @Controller()
 export class TaskController {
@@ -28,12 +27,13 @@ export class TaskController {
 
   //하위태스크 목록만 refresh가능하게 한다면 api 분리가 낫고 그게 아니면 그냥 합치는게 나을 것 같긴함.
   @Get('/:taskId')
-  @ApiOkResponse({ type: TaskDetailResDto, description: '태스크 상세 조회' })
+  @ApiOkResponse({ type: TaskResDto, description: '태스크 상세 조회' })
   async getTaskDetail(
+    @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-  ): Promise<TaskDetailResDto> {
+  ): Promise<TaskResDto> {
     try {
-      return this.taskService.getTaskDetail(taskId);
+      return this.taskService.getTaskDetail(teamId, taskId);
     } catch (err) {
       throw err;
     }
@@ -65,27 +65,24 @@ export class TaskController {
   @Post('/add')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 추가' })
   async addTask(
-    @Param('teamId') teamId: number,
     @Body() addTaskReqDto: TaskReqDto,
+    @Param('teamId') teamId: number,
   ): Promise<MsgResDto> {
     try {
-      return this.taskService.addTask(teamId, addTaskReqDto);
+      return this.taskService.addTask(addTaskReqDto, teamId);
     } catch (err) {
       throw err;
     }
   }
 
-  // 라우팅 수정하면 /team/teamId/task/taskId/addSub
   @Post('/:taskId/sub/add')
   @ApiOkResponse({ type: MsgResDto, description: '태스크 하위 목록 추가' })
   async addSubTask(
-    // teamId를 쓸 일이 있을까?
-    // @Param('teamId') teamId: number,
-    @Param('taskId') taskId: number,
     @Body() addSubTaskReqDto: SubTaskReqDto,
+    @Param('taskId') taskId: number,
   ): Promise<MsgResDto> {
     try {
-      return this.taskService.addSubTask(taskId, addSubTaskReqDto);
+      return this.taskService.addSubTask(addSubTaskReqDto, taskId);
     } catch (err) {
       throw err;
     }
@@ -96,12 +93,12 @@ export class TaskController {
   @Patch('/:taskId/modify')
   @ApiOkResponse({ type: MsgResDto, description: '팀 태스크 수정' })
   async modifyTask(
+    @Body() modifyTaskReqDto: TaskReqDto,
     @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-    @Body() modifyTaskReqDto: TaskReqDto,
-  ) {
+  ): Promise<MsgResDto> {
     try {
-      return this.taskService.modifyTask(teamId, taskId, modifyTaskReqDto);
+      return this.taskService.modifyTask(modifyTaskReqDto, teamId, taskId);
     } catch (err) {
       throw err;
     }
@@ -111,11 +108,16 @@ export class TaskController {
   @Patch('/sub/:subTaskId/modify')
   @ApiOkResponse({ type: MsgResDto, description: '서브 태스크 수정' })
   async modifySubTask(
-    @Param('subTaskId') subTaskId: number,
     @Body() modifySubTaskReqDto: SubTaskReqDto,
-  ) {
+    @Param('teamId') teamId: number,
+    @Param('subTaskId') subTaskId: number,
+  ): Promise<MsgResDto> {
     try {
-      return this.taskService.modifySubTask(subTaskId, modifySubTaskReqDto);
+      return this.taskService.modifySubTask(
+        modifySubTaskReqDto,
+        teamId,
+        subTaskId,
+      );
     } catch (err) {
       throw err;
     }
@@ -127,9 +129,9 @@ export class TaskController {
   async removeTask(
     @Param('teamId') teamId: number,
     @Param('taskId') taskId: number,
-  ) {
+  ): Promise<MsgResDto> {
     try {
-      return this.taskService.removeTask(taskId);
+      return this.taskService.removeTask(teamId, taskId);
     } catch (err) {
       throw err;
     }
@@ -137,9 +139,12 @@ export class TaskController {
 
   @Delete('/sub/:subTaskId/remove')
   @ApiOkResponse({ type: MsgResDto, description: '서브 태스크 삭제' })
-  async removeSubTask(@Param('subTaskId') subTaskId: number) {
+  async removeSubTask(
+    @Param('teamId') teamId: number,
+    @Param('subTaskId') subTaskId: number,
+  ): Promise<MsgResDto> {
     try {
-      return this.taskService.removeSubTask(subTaskId);
+      return this.taskService.removeSubTask(teamId, subTaskId);
     } catch (err) {
       throw err;
     }

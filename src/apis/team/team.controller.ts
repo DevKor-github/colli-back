@@ -44,13 +44,13 @@ export class TeamController {
   @Patch('/:teamId/modify')
   @ApiOkResponse({ type: MsgResDto, description: '팀 정보 수정' })
   async modifyTeamDetail(
+    @Body() modifyTeamReqDto: TeamReqDto,
     @Param('teamId') teamId: number,
-    @Body() modifyTeamDetailReqDto: TeamReqDto,
     // userId: number,
   ): Promise<MsgResDto> {
     // await this.memberService.checkIsMember(teamId, userId);
 
-    return this.teamService.modifyTeamDetail(modifyTeamDetailReqDto, teamId);
+    return this.teamService.modifyTeamDetail(modifyTeamReqDto, teamId);
   }
 
   //isManager 권한이 있는 유저만 가능

@@ -3,7 +3,7 @@ import { DateResDto } from 'src/common/dto/dateRes.dto';
 // import { ListResDto } from 'src/common/dto/listRes.dto';
 import { Task, User } from 'src/entities';
 
-export class TaskDetailResDto extends DateResDto {
+export class TaskResDto extends DateResDto {
   @ApiProperty({ description: 'id' })
   id: number;
 
@@ -34,7 +34,7 @@ export class TaskDetailResDto extends DateResDto {
   // subTaskList: ListResDto<>;
 
   static makeRes(data: Task) {
-    const resData = new TaskDetailResDto();
+    const resData = new TaskResDto();
 
     // 나중에 빼자 진짜 개같은 코드임 이거 -> enum으로 하면 좋을듯
     const stateArr = ['To do', 'In progress', 'Done'];
@@ -56,6 +56,6 @@ export class TaskDetailResDto extends DateResDto {
 
   static empty() {
     // 이거 잘 될라나? 결과 보고 이상하면 수정하자 귀찮다.
-    return new TaskDetailResDto();
+    return new TaskResDto();
   }
 }

@@ -1,15 +1,15 @@
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
-import { GetProfileResDto } from './dto/getProfileRes.dto';
-import { ModifyProfileReqDto } from './dto/modifyProfileReq.dto';
+import { UserResDto } from './dto/userRes.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { TaskDetailResDto } from '../team/task/dtos/taskDetailRes.dto';
+import { TaskResDto } from '../team/task/dtos/taskRes.dto';
 import { TaskService } from '../team/task/task.service';
 import { MemberService } from '../team/member/member.service';
 import { NoticeService } from '../team/notice/notice.service';
 import { ListResDto } from 'src/common/dto/listRes.dto';
 import { NoticeResDto } from '../team/notice/dto/noticeRes.dto';
+import { UserReqDto } from './dto/userReq.dto';
 
 @ApiTags('user')
 @Controller()
@@ -24,28 +24,26 @@ export class UserController {
   @Get('/my')
   async getMyProfile(
     userId: number, // 본인 유저id값
-  ): Promise<GetProfileResDto> {
+  ): Promise<UserResDto> {
     return this.userService.getUserProfile(userId);
   }
 
   @Get('/:userId/profile')
-  async getUserProfile(
-    @Param('userId') userId: number,
-  ): Promise<GetProfileResDto> {
+  async getUserProfile(@Param('userId') userId: number): Promise<UserResDto> {
     return this.userService.getUserProfile(userId);
   }
 
   @Patch('/profile/modify')
   async modifyProfile(
     userId: number,
-    @Body() modifyProfileReqDto: ModifyProfileReqDto,
+    @Body() userReqDto: UserReqDto,
   ): Promise<MsgResDto> {
-    return this.userService.modifyUser(userId, modifyProfileReqDto);
+    return this.userService.modifyUser(userReqDto, userId);
   }
 
   @Get('/task/urgent')
   @ApiOkResponse({ description: '가장 급한 과제' })
-  async getUrgentTask(userId: number): Promise<TaskDetailResDto> {
+  async getUrgentTask(userId: number): Promise<TaskResDto> {
     try {
       return this.taskService.getUrgentTask(userId, new Date());
     } catch (err) {

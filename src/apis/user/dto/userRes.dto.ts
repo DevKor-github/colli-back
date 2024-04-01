@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/entities';
 
-export class GetProfileResDto {
+export class UserResDto {
   @ApiProperty({ name: '이름' })
   name: string;
 
@@ -14,7 +14,7 @@ export class GetProfileResDto {
   static async makeRes(data: User) {
     const { name, phoneNum, evaluation } = data;
 
-    const resData = new GetProfileResDto();
+    const resData = new UserResDto();
     resData.name = name;
     resData.phoneNum = phoneNum;
     resData.evaluation = evaluation;
