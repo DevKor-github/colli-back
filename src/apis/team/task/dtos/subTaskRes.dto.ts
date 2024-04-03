@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { DateResDto } from 'src/common/dto/dateRes.dto';
 import { SubTask } from 'src/entities';
 
-export class SubTaskResDto {
+export class SubTaskResDto extends DateResDto {
   @ApiProperty({ description: '하위 태스크 id' })
   id: number;
 
@@ -21,6 +22,7 @@ export class SubTaskResDto {
     resData.taskId = data.taskId;
     resData.subTitle = data.subTitle;
     resData.content = data.content;
+    resData.createdAt = data.createdAt;
 
     return resData;
   }

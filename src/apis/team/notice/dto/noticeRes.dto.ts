@@ -27,8 +27,6 @@ export class NoticeResDto extends DateResDto {
     resData.title = data.title;
     resData.content = data.content;
     resData.createdAt = data.createdAt;
-    resData.updatedAt = data.updatedAt;
-    resData.deletedAt = data.deletedAt;
 
     return resData;
   }

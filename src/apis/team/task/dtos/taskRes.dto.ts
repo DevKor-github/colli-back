@@ -13,7 +13,6 @@ export class TaskResDto extends DateResDto {
   @ApiProperty({ description: '설명' })
   content: string;
 
-  //카테고리 id로 join해서 string 받아오기
   @ApiProperty({ description: '카테고리' })
   category: string;
 
@@ -28,10 +27,6 @@ export class TaskResDto extends DateResDto {
 
   @ApiProperty({ description: '진행상태(%)' })
   progress: number;
-
-  // 뭐가 더 나을지 잘 모르겠네
-  // @ApiProperty({ description: '하위 태스크 목록' })
-  // subTaskList: ListResDto<>;
 
   static makeRes(data: Task) {
     const resData = new TaskResDto();
@@ -48,8 +43,6 @@ export class TaskResDto extends DateResDto {
     resData.deadline = data.deadline;
     resData.progress = data.progress;
     resData.createdAt = data.createdAt;
-    resData.updatedAt = data.updatedAt;
-    resData.deletedAt = data.deletedAt;
 
     return resData;
   }
