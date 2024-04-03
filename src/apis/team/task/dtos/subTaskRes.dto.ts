@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SubTask } from 'src/entities/SubTask';
+import { SubTask } from 'src/entities';
 
 export class SubTaskResDto {
   @ApiProperty({ description: '하위 태스크 id' })

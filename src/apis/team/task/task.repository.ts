@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Task } from 'src/entities';
-import { SubTask } from 'src/entities/SubTask';
+import { Task, SubTask } from 'src/entities';
 import {
   DataSource,
   FindOptionsOrder,
