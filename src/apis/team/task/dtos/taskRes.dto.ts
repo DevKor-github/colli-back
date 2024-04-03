@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DateResDto } from 'src/common/dto/dateRes.dto';
 // import { ListResDto } from 'src/common/dto/listRes.dto';
-import { Task, User } from 'src/entities';
+import { Task } from 'src/entities';
 
 export class TaskResDto extends DateResDto {
   @ApiProperty({ description: 'id' })
@@ -20,7 +20,10 @@ export class TaskResDto extends DateResDto {
   state: string;
 
   @ApiProperty({ description: '담당자' })
-  assignee: User;
+  assignee: string;
+
+  // @ApiProperty({ description: '담당자 프로필' })
+  // assigneeProfile: string;
 
   @ApiProperty({ description: '마감기한' })
   deadline: Date;
@@ -39,7 +42,7 @@ export class TaskResDto extends DateResDto {
     resData.content = data.content;
     resData.category = data.taskCategory.categoryName;
     resData.state = stateArr[data.state];
-    resData.assignee = data.member.user;
+    resData.assignee = data.member?.user?.name;
     resData.deadline = data.deadline;
     resData.progress = data.progress;
     resData.createdAt = data.createdAt;

@@ -3,6 +3,9 @@ import { DateResDto } from 'src/common/dto/dateRes.dto';
 import { Task } from 'src/entities';
 
 export class TaskListItemResDto extends DateResDto {
+  @ApiProperty({ description: 'id' })
+  id: number;
+
   @ApiProperty({ description: '제목' })
   title: string;
 
@@ -18,13 +21,12 @@ export class TaskListItemResDto extends DateResDto {
   static makeRes(data: Task) {
     const resData = new TaskListItemResDto();
 
+    resData.id = data.id;
     resData.title = data.title;
-    resData.category = data.taskCategory.categoryName;
-    resData.assignee = data.member.user.name;
+    resData.category = data.taskCategory?.categoryName;
+    resData.assignee = data.member?.user?.name;
     resData.deadline = data.deadline;
     resData.createdAt = data.createdAt;
-    resData.updatedAt = data.updatedAt;
-    resData.deletedAt = data.deletedAt;
 
     return resData;
   }

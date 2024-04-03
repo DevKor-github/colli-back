@@ -7,6 +7,7 @@ import { TaskReqDto } from './dtos/taskReq.dto';
 import { MsgResDto } from 'src/common/dto/msgRes.dto';
 import { SubTaskReqDto } from './dtos/subTaskReq.dto';
 import { MoreThan } from 'typeorm';
+import { SubTaskResDto } from './dtos/subTaskRes.dto';
 
 @Injectable()
 export class TaskService {
@@ -16,7 +17,7 @@ export class TaskService {
   ) {}
 
   async getTaskDetail(teamId: number, taskId: number): Promise<TaskResDto> {
-    const task = await this.taskRepository
+    return this.taskRepository
       .findOneWithOptionOrFail(
         {
           id: taskId,
@@ -25,9 +26,20 @@ export class TaskService {
         { taskCategory: true, member: { user: true } },
       )
       .then((data) => TaskResDto.makeRes(data));
-    //만약 subTask목록을 한방에 뽑을거라면 여기서 뽑아오면 될것 같음.
+  }
 
-    return task;
+  async getSubTaskDetail(
+    teamId: number,
+    subTaskId: number,
+  ): Promise<SubTaskResDto> {
+    return this.subTaskRepository
+      .findOneWithOptionOrFail({
+        id: subTaskId,
+        task: {
+          teamId,
+        },
+      })
+      .then((data) => SubTaskResDto.makeRes(data));
   }
 
   async getTaskListByTeamIdAndState(
@@ -53,6 +65,28 @@ export class TaskService {
       }));
   }
 
+  async getSubTaskListByTeamIdAndTaskId(
+    teamId: number,
+    taskId: number,
+  ): Promise<ListResDto<SubTaskResDto>> {
+    return this.subTaskRepository
+      .findAllWithOption(
+        {
+          taskId,
+          task: {
+            teamId,
+          },
+        },
+        {
+          task: true,
+        },
+      )
+      .then(([datas, count]) => ({
+        dataList: datas.map((dt) => SubTaskResDto.makeRes(dt)),
+        totalCount: count,
+      }));
+  }
+
   async addTask(req: TaskReqDto, teamId: number) {
     await this.taskRepository.insert({
       teamId,
@@ -61,9 +95,15 @@ export class TaskService {
     return MsgResDto.ret();
   }
 
-  async addSubTask(req: SubTaskReqDto, taskId: number) {
+  async addSubTask(req: SubTaskReqDto, teamId: number) {
+    const { taskId } = req;
+
+    await this.taskRepository.findOneWithOptionOrFail({
+      id: taskId,
+      teamId,
+    });
+
     await this.subTaskRepository.insert({
-      taskId,
       ...req,
     });
 

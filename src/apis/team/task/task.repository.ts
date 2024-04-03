@@ -99,4 +99,23 @@ export class SubTaskRepository extends Repository<SubTask> {
       throw new Error(errorCode);
     });
   }
+
+  async findAllWithOption(
+    // page: number,
+    // take: number,
+    where: FindOptionsWhere<SubTask>,
+    relations?: FindOptionsRelations<SubTask>,
+    order: FindOptionsOrder<SubTask> = { createdAt: 'DESC' },
+    errorCode: string = 'task',
+  ) {
+    return this.findAndCount({
+      // skip: page - 1 ?? 0,
+      // take: take ?? 10,
+      where,
+      relations,
+      order,
+    }).catch(() => {
+      throw new Error(errorCode);
+    });
+  }
 }

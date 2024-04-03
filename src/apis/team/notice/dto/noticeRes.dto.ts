@@ -4,7 +4,7 @@ import { Notice } from 'src/entities';
 
 export class NoticeResDto extends DateResDto {
   @ApiProperty({ description: '공지 id' })
-  noticeId: number;
+  id: number;
 
   @ApiProperty({ description: '팀 id' })
   teamId: number;
@@ -21,7 +21,7 @@ export class NoticeResDto extends DateResDto {
   static makeRes(data: Notice) {
     const resData = new NoticeResDto();
 
-    resData.noticeId = data.id;
+    resData.id = data.id;
     resData.teamId = data.teamId;
     resData.teamName = data.team.name;
     resData.title = data.title;

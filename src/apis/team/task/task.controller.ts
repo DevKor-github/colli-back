@@ -16,6 +16,7 @@ import { ListResDto } from 'src/common/dto/listRes.dto';
 import { TaskListItemResDto } from './dtos/taskListItemRes.dto';
 import { TaskReqDto } from './dtos/taskReq.dto';
 import { SubTaskReqDto } from './dtos/subTaskReq.dto';
+import { SubTaskResDto } from './dtos/subTaskRes.dto';
 // import { MemberService } from '../member/member.service';
 
 @ApiTags('task')
@@ -39,13 +40,26 @@ export class TaskController {
     }
   }
 
+  @Get('/sub/:subTaskId')
+  @ApiOkResponse({ type: SubTaskResDto, description: '하위 태스크 상세 조회' })
+  async getSubTaskDetail(
+    @Param('teamId') teamId: number,
+    @Param('subTaskId') subTaskId: number,
+  ): Promise<SubTaskResDto> {
+    try {
+      return this.taskService.getSubTaskDetail(teamId, subTaskId);
+    } catch (err) {
+      throw err;
+    }
+  }
+
   // 조회하는 사람이 팀에 속한 멤버인지 검증하는 로직 필요
   @Get('/list')
   @ApiOkResponse({
     type: ListResDto,
     description: '태스크 목록 조회',
   })
-  async getTaskListByTeamIdAndState(
+  async getTaskListByTeam(
     @Param('teamId') teamId: number,
     @Query('state') state: string,
   ): Promise<ListResDto<TaskListItemResDto>> {
@@ -55,6 +69,19 @@ export class TaskController {
       else if (state == 'done')
         return this.taskService.getTaskListByTeamIdAndState(teamId, 2);
       else return this.taskService.getTaskListByTeamIdAndState(teamId, 1);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  @Get('/:taskId/sub/list')
+  @ApiOkResponse({ description: '하위 태스크 목록 조회' })
+  async getSubTaskListByTask(
+    @Param('teamId') teamId: number,
+    @Param('taskId') taskId: number,
+  ): Promise<ListResDto<SubTaskResDto>> {
+    try {
+      return this.taskService.getSubTaskListByTeamIdAndTaskId(teamId, taskId);
     } catch (err) {
       throw err;
     }
@@ -75,14 +102,14 @@ export class TaskController {
     }
   }
 
-  @Post('/:taskId/sub/add')
+  @Post('/sub/add')
   @ApiOkResponse({ type: MsgResDto, description: '태스크 하위 목록 추가' })
   async addSubTask(
     @Body() addSubTaskReqDto: SubTaskReqDto,
-    @Param('taskId') taskId: number,
+    @Param('teamId') teamId: number,
   ): Promise<MsgResDto> {
     try {
-      return this.taskService.addSubTask(addSubTaskReqDto, taskId);
+      return this.taskService.addSubTask(addSubTaskReqDto, teamId);
     } catch (err) {
       throw err;
     }
