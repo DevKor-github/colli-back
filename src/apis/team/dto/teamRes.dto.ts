@@ -23,8 +23,6 @@ export class TeamResDto extends DateResDto {
     resData.description = data.description;
     resData.code = data.code;
     resData.createdAt = data.createdAt;
-    resData.updatedAt = data.updatedAt;
-    resData.deletedAt = data.deletedAt;
 
     return resData;
   }

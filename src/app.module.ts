@@ -7,6 +7,9 @@ import { ScheduleModule } from './apis/team/schedule/schedule.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './apis/auth/auth.module';
 import { ColliRouterModule } from './config/routes';
+import { TaskModule } from './apis/team/task/task.module';
+import { TeamModule } from './apis/team/team.module';
+import { NoticeModule } from './apis/team/notice/notice.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,6 +26,9 @@ import { ColliRouterModule } from './config/routes';
     UserModule,
     MemberModule,
     ScheduleModule,
+    TaskModule,
+    TeamModule,
+    NoticeModule,
   ],
 })
 export class AppModule {}
